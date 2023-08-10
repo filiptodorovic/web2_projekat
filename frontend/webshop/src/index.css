@@ -11,3 +11,77 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.landing-page-container {
+  margin-top: 5rem;
+  padding: 2rem;
+  background-color: #e4e6e8; /* Light gray background */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.embed-content{
+  padding-top: 300px;
+}
+
+.google-login{
+  padding-left: 180px;
+}
+
+.landing-page-container h1 {
+  margin-bottom: 1.5rem;
+}
+
+.landing-page-container .lead {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.landing-page-container .mt-3 {
+  margin-top: 1.5rem;
+  text-align: left; /* Align buttons to the left */
+}
+
+.btn-group-lg>.btn, .btn-lg{
+  --bs-btn-padding-x: 60px 5px;
+}
+
+.btn-primary{
+  --bs-btn-padding-x: 50px 5px;
+}
+
+.btn-success{
+  --bs-btn-padding-x: 50px 5px;
+}
+
+.form-label {
+  padding-top: 17px;
+}
+
+.auth-page-container {
+  margin-top: 5rem;
+  padding: 2rem;
+  background-color: #e4e6e8; /* Light gray background */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-page-container h2 {
+  margin-bottom: 1.5rem;
+}
+
+.auth-page-container .text-center {
+  margin-top: 1.5rem;
+}
+
+.auth-page-container .mt-3 {
+  margin-top: 1.5rem;
+}
+
+.auth-page-container a {
+  color: #007bff;
+}
+
+.auth-page-container a:hover {
+  text-decoration: none;
+}

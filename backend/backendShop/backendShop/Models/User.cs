@@ -17,11 +17,5 @@ namespace backendShop.Models
         public UserType UserType { get; set; }
         public string PictureUrl { get; set; }
 
-
-        // Navigation properties for related entities
-        public virtual Seller Seller { get; set; }
-        public virtual Buyer Buyer { get; set; }
-        public virtual Admin Admin { get; set; }
-
     }
 }

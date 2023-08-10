@@ -21,27 +21,17 @@ namespace backendShop.Data
             modelBuilder.Entity<User>()
                  .HasKey(u => u.Email); // Define Email as primary key for User
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique(); // Enforce unique usernames
+            modelBuilder.Entity<Seller>()
+                .ToTable("Sellers") // Configure table name for Seller
+                .HasBaseType<User>(); // Configure inheritance relationship
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Seller)
-                .WithOne(s => s.User)
-                .HasForeignKey<Seller>(s => s.Email)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Buyer>()
+                .ToTable("Buyers") // Configure table name for Buyer
+                .HasBaseType<User>(); // Configure inheritance relationship
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Buyer)
-                .WithOne(b => b.User)
-                .HasForeignKey<Buyer>(b => b.Email)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Admin)
-                .WithOne(a => a.User)
-                .HasForeignKey<Admin>(a => a.Email)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Admin>()
+                .ToTable("Admins") // Configure table name for Admin
+                .HasBaseType<User>(); // Configure inheritance relationship
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Seller)

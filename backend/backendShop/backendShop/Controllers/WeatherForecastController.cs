@@ -1,4 +1,5 @@
 ﻿using backendShop.Data;
+using backendShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,7 +13,7 @@ namespace backendShop.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly DataContext _dbContext;
 
         private static readonly string[] Summaries = new[]
         {
@@ -23,7 +24,7 @@ namespace backendShop.Controllers
 
         public WeatherForecastController(DataContext context)
         {
-            _context = context;
+            _dbContext = context;
         }
 
         [HttpGet]
@@ -31,27 +32,58 @@ namespace backendShop.Controllers
         {
             var rng = new Random();
 
-            Models.User u = new Models.User();
-            u.Email = "nekiemail2@gmail.com";
-            u.Username = "username2";
-            u.Password = "password1";
-            u.Name = "Name1";
-            u.LastName = "LastName1";
-            u.DateOfBith = DateTime.Now;
-            u.Address = "Address1";
-            u.UserType = Models.UserType.BUYER;
-            u.PictureUrl = "SomeUrl.com";
+                // Create and add a new Seller
+                var newSeller = new Seller
+                {
+                    Email = "john.seller@example.com",
+                    Username = "johnseller",
+                    Password = "hashedpass", // You would typically hash the password
+                    Name = "John",
+                    LastName = "Seller",
+                    DateOfBith = new DateTime(1990, 5, 15),
+                    Address = "123 Main St",
+                    UserType = UserType.SELLER,
+                    PictureUrl = "seller.jpg",
+                    ValidationState = ValidationState.PROCESSING,
+                    ShippingCost = 10,
+                    // Other properties specific to Seller
+                };
+                _dbContext.Sellers.Add(newSeller);
 
-            _context.Users.Add(u);
-            _context.SaveChanges();
+                // Create and add a new Buyer
+                var newBuyer = new Buyer
+                {
+                    Email = "jane.buyer@example.com",
+                    Username = "janebuyer",
+                    Password = "hashedpass", // You would typically hash the password
+                    Name = "Jane",
+                    LastName = "Buyer",
+                    DateOfBith = new DateTime(1985, 10, 20),
+                    Address = "456 Park Ave",
+                    UserType = UserType.BUYER,
+                    PictureUrl = "buyer.jpg",
+                    // Other properties specific to Buyer
+                };
+                _dbContext.Buyers.Add(newBuyer);
 
-            var user = _context.Users.Find("nekiemail@gmail.com");
+                // Create and add a new Admin
+                var newAdmin = new Admin
+                {
+                    Email = "mike.admin@example.com",
+                    Username = "mikeadmin",
+                    Password = "hashedpass", // You would typically hash the password
+                    Name = "Mike",
+                    LastName = "Admin",
+                    DateOfBith = new DateTime(1980, 3, 8),
+                    Address = "789 Elm Rd",
+                    UserType = UserType.ADMIN,
+                    PictureUrl = "admin.jpg",
+                    // Other properties specific to Admin
+                };
+                _dbContext.Admins.Add(newAdmin);
 
-            if (((Models.User)user).Buyer != null) {
-                if (2 > 1) { 
-                
-                }
-            }
+                // Save changes to the database
+                _dbContext.SaveChanges();
 
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
