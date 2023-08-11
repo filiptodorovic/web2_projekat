@@ -71,13 +71,19 @@ const RegisterPage = () => {
             Already have an account? <Link to="/login">Log In</Link>
           </div>
         </Col>
-        <Col md={6} className="embed-content">
+        <Col md={1}>
+        <div class="vl"></div>
+        </Col>
+        <Col md={4} className="embed-content">
           <h4 className="text-center">Register via Google </h4>
-          <div className="text-center google-login ">
+          <div className="text-center google-register">
           <GoogleLogin
             onSuccess={credentialResponse => {
               console.log(credentialResponse);
             }}
+
+            theme="outline"
+            shape="circle"
           
             onError={() => {
               console.log('Login Failed');

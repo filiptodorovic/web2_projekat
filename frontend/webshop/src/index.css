@@ -20,12 +20,31 @@ code {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 .embed-content{
   padding-top: 300px;
 }
 
+iframe {
+  display: inline;
+}
+
+hr{
+  opacity: 0.5;
+}
+
+.vl {
+  border-left: 2px solid gray;
+  height: 650px;
+  margin-top: 150px;
+}
+
 .google-login{
   padding-left: 180px;
+}
+
+.google-register{
+  padding-left: 80px;
 }
 
 .landing-page-container h1 {

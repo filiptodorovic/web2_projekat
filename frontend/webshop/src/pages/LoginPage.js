@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { GoogleLogin } from '@react-oauth/google';
+
 
 const LoginPage = () => {
   return (
@@ -25,7 +27,25 @@ const LoginPage = () => {
               </Button>
             </div>
           </Form>
-          <div className="mt-3 text-center">
+          <hr></hr>
+          <h5 className="text-center">Or</h5>
+          <div className="mt-2 text-center google-login">
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              console.log(credentialResponse);
+            }}
+
+            text="signup_with"
+            theme="outline"
+            shape="circle"
+          
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          
+          />
+          </div>
+          <div className="mt-2 text-center">
             Don't have an account? <Link to="/register">Register</Link>
           </div>
         </Col>
