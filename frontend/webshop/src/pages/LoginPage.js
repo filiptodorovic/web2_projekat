@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { GoogleLogin } from '@react-oauth/google';
-
+import '../index.css'; // Import custom stylesheet
 
 const LoginPage = () => {
   return (

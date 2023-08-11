@@ -77,6 +77,7 @@ hr{
   padding-top: 17px;
 }
 
+/*auth page*/
 .auth-page-container {
   margin-top: 5rem;
   padding: 2rem;
@@ -103,4 +104,93 @@ hr{
 
 .auth-page-container a:hover {
   text-decoration: none;
+}
+
+/*profile*/
+.profile-container {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.profile-picture {
+  flex: 1;
+  text-align: center;
+  padding: 2rem;
+}
+
+.profile-details {
+  flex: 2;
+  padding: 2rem;
+}
+
+.profile-details h2 {
+  margin-bottom: 1rem;
+}
+
+.profile-picture img {
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  height: 250px;
+  width: 250px;
+}
+
+.profile-details p {
+  margin-bottom: 0.5rem;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.custom-file-input::before {
+  content: 'Upload Picture';
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.custom-file-input:hover::before {
+  background: #0056b3;
+}
+
+.btn-secondary,.btn-primary{
+  margin-top: 15px;
+  padding: 5px 60px;
+}
+
+.edit-profile-container{
+  margin-top: 5rem;
+  padding: 2rem;
+  background-color: #cccccc; /* Light gray background */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-details {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+
+.profile-header {
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+}
+
+.profile-section p {
+  margin-bottom: 5px;
+  font-size: 17px;
+  padding-top: 10px;
+}
+
+.profile-section{
+  padding-top: 70px;
 }
