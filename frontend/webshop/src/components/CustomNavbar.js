@@ -12,6 +12,8 @@ const CustomNavbar = () => {
             <Nav.Link href="/profile">Profile</Nav.Link>
             <Nav.Link href="/seller-verification">Seller Verification</Nav.Link>
             <Nav.Link href="/manage-products">Manage Products</Nav.Link>
+            <Nav.Link href="/new-orders">New Orders</Nav.Link>
+            <Nav.Link href="/my-orders">My Orders</Nav.Link>
             <Form className="d-flex">
             {/* <Nav.Link href="/">Log Out</Nav.Link> */}
 

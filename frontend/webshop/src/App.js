@@ -8,6 +8,8 @@ import ProfilePage from './pages/ProfilePage';
 import SellerVerificationPage from './pages/SellerVerificationPage';
 import CustomNavbar from './components/CustomNavbar';
 import ManageProductsPage from './pages/ManageProductsPage';
+import NewOrdersPage from './pages/NewOrdersPage';
+import MyOrdersPage from './pages/MyOrdersPage';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/seller-verification" element={<SellerVerificationPage />} />
         <Route path="/manage-products" element={<ManageProductsPage />} />
+        <Route path="/new-orders" element={<NewOrdersPage />} />
+        <Route path="/my-orders" element={<MyOrdersPage />} />
       </Routes>
     </Router>
   );
