@@ -73,6 +73,11 @@ hr{
   --bs-btn-padding-x: 50px 5px;
 }
 
+.btn-danger{
+  --bs-btn-padding-x: 50px 5px;
+}
+
+
 .form-label {
   padding-top: 17px;
 }
@@ -193,4 +198,23 @@ hr{
 
 .profile-section{
   padding-top: 70px;
+}
+
+
+.seller-verification {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  max-width: 800px;
+}
+
+.page-heading {
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
+.table {
+  margin-top: 10px;
 }
