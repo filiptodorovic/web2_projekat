@@ -218,3 +218,11 @@ hr{
 .table {
   margin-top: 10px;
 }
+
+.seller-verification{
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import '../index.css'; // Import custom stylesheet
+import '../index.css';
 import { GoogleLogin } from '@react-oauth/google';
 
 

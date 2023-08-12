@@ -6,10 +6,12 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import SellerVerification from './pages/SellerVerification';
+import CustomNavbar from './components/CustomNavbar';
 
 function App() {
   return (
     <Router>
+      <CustomNavbar/>
       <Routes>
         <Route path="/" element={<LandingPageButtons />} />
         <Route path="/login" element={<LoginPage />} />

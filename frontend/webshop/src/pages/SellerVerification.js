@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Table, Button } from 'react-bootstrap';
-import '../index.css'; // Import custom stylesheet
+import '../index.css';
 
 const SellerVerificationPage = () => {
-  // Dummy seller data (replace with actual data)
   const sellers = [
     {
       email: 'seller1@example.com',
@@ -20,15 +19,13 @@ const SellerVerificationPage = () => {
         username: 'seller2',
         verificationStatus: 'Pending',
     }
-    // Add more dummy sellers...
   ];
 
+
   const handleApprove = (email) => {
-    // Implement approve logic here
   };
 
   const handleDeny = (email) => {
-    // Implement deny logic here
   };
 
   return (
