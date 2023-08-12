@@ -77,6 +77,10 @@ hr{
   --bs-btn-padding-x: 50px 5px;
 }
 
+.btn-info{
+  --bs-btn-padding-x: 50px 5px;
+}
+
 
 .form-label {
   padding-top: 17px;

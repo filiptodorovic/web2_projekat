@@ -109,7 +109,7 @@ const ManageProductsPage = () => {
               <td>{product.description}</td>
               <td>
                 <Button
-                  variant="info"
+                  variant="success"
                   onClick={() => handleEditProduct(product.id)}
                 >
                   Edit
