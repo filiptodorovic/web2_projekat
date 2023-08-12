@@ -1,7 +1,5 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import {Container,Nav,Navbar,Button,Form} from 'react-bootstrap';
 
 const CustomNavbar = () => {
   return (
@@ -13,7 +11,12 @@ const CustomNavbar = () => {
           <Nav className="ml-auto">
             <Nav.Link href="/profile">Profile</Nav.Link>
             <Nav.Link href="/seller-verification">Seller Verification</Nav.Link>
-            <Nav.Link href="/">Log Out</Nav.Link>
+            <Nav.Link href="/manage-products">Manage Products</Nav.Link>
+            <Form className="d-flex">
+            {/* <Nav.Link href="/">Log Out</Nav.Link> */}
+
+                <Button variant="outline-danger" href="/">Log Out</Button>
+            </Form>
           </Nav>
         </Navbar.Collapse>
       </Container>
