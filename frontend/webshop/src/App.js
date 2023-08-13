@@ -10,6 +10,8 @@ import CustomNavbar from './components/CustomNavbar';
 import ManageProductsPage from './pages/ManageProductsPage';
 import NewOrdersPage from './pages/NewOrdersPage';
 import MyOrdersPage from './pages/MyOrdersPage';
+import AllOrdersPage from './pages/AllOrdersPage';
+import PreviousOrdersPage from './pages/PreviousOrdersPage';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/manage-products" element={<ManageProductsPage />} />
         <Route path="/new-orders" element={<NewOrdersPage />} />
         <Route path="/my-orders" element={<MyOrdersPage />} />
+        <Route path="/all-orders" element={<AllOrdersPage />} />
+        <Route path="/previous-orders" element={<PreviousOrdersPage />} />
       </Routes>
     </Router>
   );
