@@ -12,7 +12,8 @@ namespace backendShop.Models
         public string Description { get; set; }
         public string PictureUrl { get; set; }
         public string SellerEmail { get; set; }
-        public virtual Seller Seller { get; set; }
+        public virtual User User { get; set; }
+        public int UserId { get; set; }
         public virtual List<OrderProduct> OrderItems { get; set; }
 
     }
