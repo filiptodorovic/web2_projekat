@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LandingPageButtons from './components/LandingPageButtons';
@@ -12,6 +12,7 @@ import NewOrdersPage from './pages/NewOrdersPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import AllOrdersPage from './pages/AllOrdersPage';
 import PreviousOrdersPage from './pages/PreviousOrdersPage';
+import ProductsPage from './pages/ProductsPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/my-orders" element={<MyOrdersPage />} />
         <Route path="/all-orders" element={<AllOrdersPage />} />
         <Route path="/previous-orders" element={<PreviousOrdersPage />} />
+        <Route path="/products" element={<ProductsPage />} />
       </Routes>
     </Router>
   );

@@ -246,3 +246,11 @@ hr{
   padding-top: 40px;
   padding-bottom: 40px;
 }
+
+.card-img-top{
+  height: 200px;
+}
+
+.card-body-product{
+  background-color: #f8f9fa;
+}
