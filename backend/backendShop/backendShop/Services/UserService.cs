@@ -2,39 +2,47 @@
 using backendShop.DTO;
 using backendShop.Interfaces;
 using backendShop.Models;
+using backendShop.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace backendShop.Services
 {
     public class UserService : IUserService
     {
-        private readonly DataContext _context;
-        public UserService(DataContext context) { _context = context; }
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository repo) { _userRepository=repo; }
 
-        public bool RegisterUser(RegistrationDataDTO regdata)
+        public async Task<UserDTO> RegisterUser(RegistrationDataDTO regdata)
         {
+
+            // Check everything if its okay in terms if the user exists already and if data is correct
+            //List<User>? users = await _userRepository.GetAllUsers();
+
+            User newUser = new User();
+
             if (regdata!=null) {
-                User user = new User();
-                user.Password = regdata.Password;
-                user.Email = regdata.Email;
-                user.PictureUrl = "";
-                user.Name = regdata.Name;
-                user.LastName = regdata.LastName;
-                user.Username = regdata.Username;
-                user.Address  = regdata.Address;
-                user.DateOfBith=regdata.DateOfBith;
-                user.UserType=regdata.UserType;
+                newUser.Password = regdata.Password;
+                newUser.Email = regdata.Email;
+                newUser.PictureUrl = "";
+                newUser.Name = regdata.Name;
+                newUser.LastName = regdata.LastName;
+                newUser.Username = regdata.Username;
+                newUser.Address  = regdata.Address;
+                newUser.DateOfBith=regdata.DateOfBith;
+                newUser.UserType=regdata.UserType;
                 if (regdata.UserType == UserType.SELLER) {
-                    user.DeliveryCost = 100;
+                    newUser.DeliveryCost = 100;
                 }
-
-                _context.Users.Add(user);
-                _context.SaveChanges();
-
             }
 
 
-            return true;
+            User writtenUser = await _userRepository.Register(newUser);
+            // Use mapper for UserDTO
+
+            UserDTO retUserDTO = new UserDTO();
+            return retUserDTO;
         }
     }
 }

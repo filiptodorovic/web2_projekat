@@ -1,9 +1,11 @@
 ﻿using backendShop.DTO;
+using backendShop.Models;
+using System.Threading.Tasks;
 
 namespace backendShop.Interfaces
 {
     public interface IUserService
     {
-        public bool RegisterUser(RegistrationDataDTO regdata);
+        Task<UserDTO> RegisterUser(RegistrationDataDTO regdata);
     }
 }

@@ -1,5 +1,6 @@
 using backendShop.Data;
 using backendShop.Interfaces;
+using backendShop.Repository;
 using backendShop.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,8 @@ namespace backendShop
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "backendShop", Version = "v1" });
             //});
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
 
             services.AddScoped<IUserService, UserService>();

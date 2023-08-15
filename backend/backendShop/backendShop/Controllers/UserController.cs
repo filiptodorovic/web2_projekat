@@ -2,6 +2,7 @@
 using backendShop.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace backendShop.Controllers
 {
@@ -18,19 +19,13 @@ namespace backendShop.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public IActionResult Register([FromBody] RegistrationDataDTO registerData)
+        public async Task<IActionResult> Register([FromBody] RegistrationDataDTO registerData)
         {
-            // Call the service method
-            bool success = _userService.RegisterUser(registerData);
+            UserDTO writtenUser = await _userService.RegisterUser(registerData);
 
-            if (success)
-            {
-                return Ok(new { Message = "User registered successfully." });
-            }
-            else
-            {
-                return BadRequest(new { Message = "User registration failed." });
-            }
+            if (writtenUser == null)
+                return BadRequest();
+            return Ok(writtenUser);
         }
     }
 }
