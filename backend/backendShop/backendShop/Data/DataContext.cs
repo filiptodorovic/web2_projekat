@@ -28,7 +28,12 @@ namespace backendShop.Data
         #region ModelConfiguration
         private void ConfigureUsers(ModelBuilder modelBuilder) {
             modelBuilder.Entity<User>()
+                    .Property(u => u.UserId)
+                    .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<User>()
                      .HasKey(u => u.UserId);
+
             modelBuilder.Entity<User>()
                   .HasIndex(p => p.Email)
                   .IsUnique();

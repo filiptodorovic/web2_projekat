@@ -1,4 +1,6 @@
 using backendShop.Data;
+using backendShop.Interfaces;
+using backendShop.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,10 +32,23 @@ namespace backendShop
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "backendShop", Version = "v1" });
+            //});
+
+
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "backendShop", Version = "v1" });
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder
+                        .WithOrigins("http://localhost:3000") // Allow only requests from this origin
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
             });
+
             services.AddDbContext<DataContext>(options =>
                                             options.UseSqlServer(Configuration.GetConnectionString("DB_ConnecionString")));
         }
@@ -41,18 +56,20 @@ namespace backendShop
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "backendShop v1"));
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "backendShop v1"));
+            //}
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseEndpoints(endpoints =>
             {
