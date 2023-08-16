@@ -254,3 +254,8 @@ hr{
 .card-body-product{
   background-color: #f8f9fa;
 }
+
+.error-text{
+  color:red;
+}
+

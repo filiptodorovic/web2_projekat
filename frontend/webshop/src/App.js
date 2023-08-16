@@ -15,6 +15,7 @@ import PreviousOrdersPage from './pages/PreviousOrdersPage';
 import ProductsPage from './pages/ProductsPage';
 
 function App() {
+  require('dotenv').config()
   return (
     <Router>
       <CustomNavbar/>

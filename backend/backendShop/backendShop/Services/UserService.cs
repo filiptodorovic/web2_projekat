@@ -3,8 +3,11 @@ using backendShop.DTO;
 using backendShop.Interfaces;
 using backendShop.Models;
 using backendShop.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace backendShop.Services
@@ -30,7 +33,17 @@ namespace backendShop.Services
                 newUser.LastName = regdata.LastName;
                 newUser.Username = regdata.Username;
                 newUser.Address  = regdata.Address;
-                newUser.DateOfBith=regdata.DateOfBith;
+
+                if (DateTime.TryParseExact(regdata.DateOfBith, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    // Parsing was successful, 'date' contains the parsed DateTime value
+                    newUser.DateOfBith = date;
+                }
+                else
+                {
+                    // Parsing failed, handle the error
+                }
+
                 newUser.UserType=regdata.UserType;
                 if (regdata.UserType == UserType.SELLER) {
                     newUser.DeliveryCost = 100;
