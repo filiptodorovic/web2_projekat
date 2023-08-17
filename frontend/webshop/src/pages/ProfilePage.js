@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Navbar, Nav, Form, Button, Row, Col } from 'react-bootstrap';
 import '../index.css'; // Import custom stylesheet
+import { fetchUserData } from '../services/UserService';
 
 const ProfilePage = () => {
   const [user, setUser] = useState({
@@ -15,32 +16,39 @@ const ProfilePage = () => {
     pictureUrl: '',
   });
 
-  useEffect(() => {
-    // Fetch user data from an API or other source
-    // For now, let's set dummy data
-    const fetchedUser = {
-      email: 'john@example.com',
-      username: 'john_doe',
-      name: 'John',
-      lastName: 'Doe',
-      dateOfBirth: '1990-01-01',
-      address: '123 Main St, City',
-      userType: 'Seller',
-      verificationStatus: 'Verified',
-      pictureUrl: 'https://keystoneacademic-res.cloudinary.com/image/upload/element/15/159403_Eleceng.jpg',
-    };
+  // useEffect(() => {
+  //   // Fetch user data from an API or other source
+  //   // For now, let's set dummy data
+  //   const fetchedUser = {
+  //     email: 'john@example.com',
+  //     username: 'john_doe',
+  //     name: 'John',
+  //     lastName: 'Doe',
+  //     dateOfBirth: '1990-01-01',
+  //     address: '123 Main St, City',
+  //     userType: 2,
+  //     verificationStatus: 0,
+  //     pictureUrl: 'https://keystoneacademic-res.cloudinary.com/image/upload/element/15/159403_Eleceng.jpg',
+  //   };
 
-    setUser(fetchedUser);
-  }, []); // Empty dependency array ensures the effect runs once on component mount
+  //   setUser(fetchedUser);
+  // }, []); // Empty dependency array ensures the effect runs once on component mount
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleLogout = () => {
-    // Perform any logout actions here
-  
-    // Redirect to the root page
-    window.location.href = '/';
-  };
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await fetchUserData();
+        console.log(userData.data);
+        setUser(userData.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    getUserData();
+  }, []); // Empty dependency array ensures the effect runs once on component mount
 
   const handleEditClick = () => {
     setIsEditing(true);

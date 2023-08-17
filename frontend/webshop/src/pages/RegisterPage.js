@@ -25,14 +25,15 @@ const RegisterPage = () => {
     console.log('Register values:', values);
     try {
       const response = await registerUser(values);
-      if(response!=null){
-        alert("Successfully registered!");
-      }
+      console.log('Registration success:', response);
+      alert("Successfully registered!");
     } catch (error) {
-      alert(error);
+      
+      console.error('Registration error:', error);
+      alert(`[Error]: ${JSON.stringify(error.response.data.message)}`);
+    } finally {
+      setSubmitting(false);
     }
-    // Don't forget to call setSubmitting to indicate that the form submission is complete
-    setSubmitting(false);
   };
 
   return (

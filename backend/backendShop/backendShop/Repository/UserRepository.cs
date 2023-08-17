@@ -3,6 +3,7 @@ using backendShop.Interfaces;
 using backendShop.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace backendShop.Repository
@@ -28,9 +29,9 @@ namespace backendShop.Repository
             }
         }
 
-        Task<List<User>> IUserRepository.GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return null;
+            return _context.Users.ToList();
         }
     }
 }

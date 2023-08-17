@@ -10,3 +10,19 @@ export const registerUser = async (registrationData) => {
     );
 };
 
+export const loginUser = async (loginData) => {
+  return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/log-in`,
+    loginData
+  );
+};
+
+export const fetchUserData = async () => {
+  return await await axios.get(
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/profile`, 
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+    });
+}
