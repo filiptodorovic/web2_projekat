@@ -14,12 +14,13 @@ const ProfilePage = () => {
     const getUserData = async () => {
       try {
         const userData = await fetchUserData();
+        const date = userData.data.dateOfBirth.split('T')[0];
         setUser(new User(
           userData.data.email,
           userData.data.username,
           userData.data.name,
           userData.data.lastName,
-          userData.data.dateOfBirth,
+          date,
           userData.data.address,
           userData.data.userType,
           userData.data.verificationStatus,
