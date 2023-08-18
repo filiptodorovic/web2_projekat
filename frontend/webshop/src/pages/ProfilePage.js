@@ -2,37 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Container, Navbar, Nav, Form, Button, Row, Col } from 'react-bootstrap';
 import '../index.css'; // Import custom stylesheet
 import { fetchUserData } from '../services/UserService';
+import User from '../models/User'
 
 const ProfilePage = () => {
-  const [user, setUser] = useState({
-    email: '',
-    username: '',
-    name: '',
-    lastName: '',
-    dateOfBirth: '',
-    address: '',
-    userType: '',
-    verificationStatus: '',
-    pictureUrl: '',
-  });
+
 
   const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState(new User()); // Initialize with an instance of User
 
   useEffect(() => {
     const getUserData = async () => {
       try {
         const userData = await fetchUserData();
-        console.log(userData.data);
-        userData.data.dateOfBirth=userData.data.dateOfBirth.split("T")[0];
-        console.log(userData.data.dateOfBirth)
-        setUser(userData.data);
+        setUser(new User(
+          userData.data.email,
+          userData.data.username,
+          userData.data.name,
+          userData.data.lastName,
+          userData.data.dateOfBirth,
+          userData.data.address,
+          userData.data.userType,
+          userData.data.verificationStatus,
+          userData.data.pictureUrl
+        ));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     getUserData();
-  }, []); // Empty dependency array ensures the effect runs once on component mount
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
