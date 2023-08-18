@@ -33,5 +33,13 @@ namespace backendShop.Repository
         {
             return _context.Users.ToList();
         }
+
+        public async Task<bool> UpdateUser(User u)
+        {
+            _context.Update(u);
+            _context.SaveChanges();
+            return true;
+
+        }
     }
 }

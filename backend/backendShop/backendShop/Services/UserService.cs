@@ -13,6 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -47,6 +50,19 @@ namespace backendShop.Services
                 }
                 return builder.ToString();
             }
+        }
+
+        public void SendEmail(string recepient, string message) {
+            string sender = _configuration["EmailService:SenderEmail"];
+            var smtpClient = new SmtpClient(_configuration["EmailService:SMTPClient"])
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(sender, _configuration["EmailService:SenderPass"]),
+                EnableSsl = true,
+            };
+
+            smtpClient.Send(sender, recepient, "[Web2Store] Verification status", message);
+
         }
 
 
@@ -145,5 +161,89 @@ namespace backendShop.Services
             return retUserDTO;
 
         }
+
+        public async Task<List<SellerDTO>> GetAllSellers() {
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            List<User> sellers = users.FindAll(u => u.UserType == UserType.SELLER);
+
+            List<SellerDTO> retSellers = new List<SellerDTO>();
+
+            foreach (User u in sellers) {
+                SellerDTO seller = new SellerDTO();
+                seller.Email=u.Email;
+                seller.Username = u.Username;
+                seller.VerificationStatus = u.VerificationStatus;
+                retSellers.Add(seller);
+            }
+
+            return retSellers;
+        }
+
+        public async Task<List<SellerDTO>> SellerService(string sellerEmail, SellerApprovalActions action)
+        {
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            User user = users.FirstOrDefault(u => u.Email == sellerEmail);
+            if (user == null)
+                throw new Exception("Seller not found in the DB!");
+
+            if (user.UserType!=UserType.SELLER)
+                throw new Exception("The user is not seller!");
+
+            if(user.VerificationStatus!=VerificationStatus.PENDING)
+                throw new Exception($"Seller cannot be {action.ToString()}");
+
+
+
+            if (action == SellerApprovalActions.APPROVE)
+            {
+                user.VerificationStatus = VerificationStatus.APPROVED;
+            }
+            else
+            {
+                user.VerificationStatus = VerificationStatus.DENIED;
+            }
+
+
+
+            try {
+                bool result = await _userRepository.UpdateUser(user);
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+
+            //Email message
+            string message = $"Dear {user.Username},\n\nYou have been {user.VerificationStatus.ToString()}.\n\nBest Regards,\nBackend Server\n";
+
+            try
+            {
+                SendEmail("trecagodinapsi@gmail.com", message);// I am using a personal email so I don't spam people
+            }
+            catch (Exception ex) { 
+                //Do nothing :(
+            }
+
+            users = await _userRepository.GetAllUsers();
+            List<User> sellers = users.FindAll(u => u.UserType == UserType.SELLER);
+
+
+            List<SellerDTO> retSellers = new List<SellerDTO>();
+
+            foreach (User u in sellers)
+            {
+                SellerDTO s = new SellerDTO();
+                s.Email = u.Email;
+                s.Username = u.Username;
+                s.VerificationStatus = u.VerificationStatus;
+                retSellers.Add(s);
+            }
+
+            return retSellers;
+        }
+
+
+
     }
 }

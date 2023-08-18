@@ -3,6 +3,7 @@ using backendShop.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,5 +75,64 @@ namespace backendShop.Controllers
                 return BadRequest();
             return Ok(user);
         }
+
+        [HttpGet("get-all-sellers")]
+        [Authorize]
+        //add roles
+        public async Task<IActionResult> GetAllSellers()
+        {
+            List<SellerDTO> sellers = await _userService.GetAllSellers();
+            
+            if (sellers == null)
+                return BadRequest(new { Message = "No sellers in the DB!" });
+            return Ok(sellers);
+        }
+
+        [HttpPost("approve-seller")]
+        [Authorize]
+        //add roles
+        public async Task<IActionResult> ApproveSeller([FromBody] SellerDTO sellerData)
+        {
+            List<SellerDTO> sellers = null;
+            try
+            {
+
+                sellers = await _userService.SellerService(sellerData.Email, SellerApprovalActions.APPROVE);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+
+            }
+
+            if (sellers == null)
+                return BadRequest(new { Message = "No sellers in the DB!" });
+            return Ok(sellers);
+        }
+
+        [HttpPost("deny-seller")]
+        [Authorize]
+        //add roles
+        public async Task<IActionResult> DenySeller([FromBody] SellerDTO sellerData)
+        {
+            List<SellerDTO> sellers = null;
+            try
+            {
+
+                sellers = await _userService.SellerService(sellerData.Email, SellerApprovalActions.DENY);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+
+            }
+
+            if (sellers == null)
+                return BadRequest(new { Message = "No sellers in the DB!" });
+            return Ok(sellers);
+        }
+
     }
 }

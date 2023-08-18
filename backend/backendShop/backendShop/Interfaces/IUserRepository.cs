@@ -8,5 +8,6 @@ namespace backendShop.Interfaces
     {
         Task<User> Register(User u);
         Task<List<User>> GetAllUsers();
+        Task<bool> UpdateUser(User u);
     }
 }
