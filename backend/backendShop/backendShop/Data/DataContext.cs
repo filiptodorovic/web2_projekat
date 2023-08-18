@@ -50,7 +50,7 @@ namespace backendShop.Data
                   .Property(p => p.Password)
                   .IsRequired();
             modelBuilder.Entity<User>()
-                  .Property(p => p.DateOfBith)
+                  .Property(p => p.DateOfBirth)
                   .IsRequired();
             modelBuilder.Entity<User>()
                   .Property(p => p.Address)

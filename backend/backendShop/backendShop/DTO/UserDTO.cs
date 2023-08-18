@@ -12,7 +12,7 @@ namespace backendShop.DTO
         public string Password { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
-        public DateTime DateOfBith { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string PictureUrl { get; set; }
         public UserType UserType { get; set; }

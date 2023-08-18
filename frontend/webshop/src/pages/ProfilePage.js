@@ -16,24 +16,6 @@ const ProfilePage = () => {
     pictureUrl: '',
   });
 
-  // useEffect(() => {
-  //   // Fetch user data from an API or other source
-  //   // For now, let's set dummy data
-  //   const fetchedUser = {
-  //     email: 'john@example.com',
-  //     username: 'john_doe',
-  //     name: 'John',
-  //     lastName: 'Doe',
-  //     dateOfBirth: '1990-01-01',
-  //     address: '123 Main St, City',
-  //     userType: 2,
-  //     verificationStatus: 0,
-  //     pictureUrl: 'https://keystoneacademic-res.cloudinary.com/image/upload/element/15/159403_Eleceng.jpg',
-  //   };
-
-  //   setUser(fetchedUser);
-  // }, []); // Empty dependency array ensures the effect runs once on component mount
-
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -41,6 +23,8 @@ const ProfilePage = () => {
       try {
         const userData = await fetchUserData();
         console.log(userData.data);
+        userData.data.dateOfBirth=userData.data.dateOfBirth.split("T")[0];
+        console.log(userData.data.dateOfBirth)
         setUser(userData.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -62,6 +46,32 @@ const ProfilePage = () => {
 
   const handlePictureUpload = (event) => {
     // Handle picture upload logic here
+  };
+
+  const showUser = (param) => {
+    switch(param) {
+      case 0:
+        return 'Admin';
+      case 1:
+        return 'Seller';
+      case 2:
+        return 'Buyer';
+      default:
+        return 'Buyer';
+    }
+  };
+
+  const getVerificationStatus = (param) => {
+    switch(param) {
+      case 0:
+        return 'Approved';
+      case 1:
+        return 'Denied';
+      case 2:
+        return 'Pending';
+      default:
+        return 'Buyer';
+    }
   };
 
   return (
@@ -94,9 +104,9 @@ const ProfilePage = () => {
                 <p><strong>Username:</strong> {user.username}</p>
                 <p><strong>Date of Birth:</strong> {user.dateOfBirth}</p>
                 <p><strong>Address:</strong> {user.address}</p>
-                <p><strong>User Type:</strong> {user.userType}</p>
-                {user.userType === 'Seller' && (
-                <p><strong>Verification Status:</strong> {user.verificationStatus}</p>
+                <p><strong>User Type:</strong> {showUser(user.userType) }</p>
+                {user.userType === 1 && (
+                <p><strong>Verification Status:</strong> {getVerificationStatus(user.verificationStatus)}</p>
                 )}
             </div>
             </Col>
@@ -109,28 +119,24 @@ const ProfilePage = () => {
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" value={user.email} readOnly={!isEditing} disabled={!isEditing}/>
                 </Form.Group>
-                {/* Add more form fields for other user data */}
             </Form>
             <Form>
                 <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" value={user.username} readOnly={!isEditing} disabled={!isEditing}/>
                 </Form.Group>
-                {/* Add more form fields for other user data */}
             </Form>
             <Form>
                 <Form.Group controlId="dateofbirth">
                 <Form.Label>Date of birth</Form.Label>
                 <Form.Control type="date" value={user.dateOfBirth} readOnly={!isEditing} disabled={!isEditing}/>
                 </Form.Group>
-                {/* Add more form fields for other user data */}
             </Form>
             <Form>
                 <Form.Group controlId="address">
                 <Form.Label>Address</Form.Label>
                 <Form.Control type="text" value={user.email} readOnly={!isEditing} disabled={!isEditing}/>
                 </Form.Group>
-                {/* Add more form fields for other user data */}
             </Form>
 
 

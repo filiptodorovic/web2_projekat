@@ -1,8 +1,16 @@
 import React,{useState} from 'react';
 import {Container,Nav,Navbar,Button,Modal} from 'react-bootstrap';
-import ShoppingCart from '../pages/ShoppingCart';
+import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = (cartItems) => {
+
+    let navigate = useNavigate();
+    const logOut = () => {
+      localStorage.clear();
+      alert("Logged out!");
+      navigate("/");
+    };
+
     return (
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
@@ -24,7 +32,7 @@ const CustomNavbar = (cartItems) => {
             </Nav>
             <Nav>
                 <Nav.Link href="/">
-                  <Button variant="outline-danger">Log Out</Button>
+                  <Button variant="outline-danger" onClick={logOut}>Log Out</Button>
                 </Nav.Link>
             </Nav>
           </Navbar.Collapse>

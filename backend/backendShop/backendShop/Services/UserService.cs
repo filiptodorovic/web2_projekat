@@ -69,11 +69,12 @@ namespace backendShop.Services
                 newUser.LastName = regdata.LastName;
                 newUser.Username = regdata.Username;
                 newUser.Address  = regdata.Address;
-                newUser.DateOfBith = regdata.DateOfBith;
+                newUser.DateOfBirth = regdata.DateOfBirth;
 
                 newUser.UserType=regdata.UserType;
                 if (regdata.UserType == UserType.SELLER) {
                     newUser.DeliveryCost = 100;
+                    newUser.VerificationStatus = VerificationStatus.PENDING;
                 }
             }
 

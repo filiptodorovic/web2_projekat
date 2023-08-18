@@ -22,6 +22,7 @@ const RegisterPage = () => {
 
 
   const handleSubmitForm = async (values, { setSubmitting }) => {
+    values.userType = parseInt(values.userType, 10);
     console.log('Register values:', values);
     try {
       const response = await registerUser(values);
@@ -53,6 +54,7 @@ const RegisterPage = () => {
               dateOfBirth: '',
               address: '',
               userType: 2,
+              pictureUrl:null
             }}
             validationSchema={registrationValidationSchema}
             onSubmit={handleSubmitForm}
