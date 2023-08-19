@@ -1,6 +1,7 @@
 using AutoMapper;
 using backendShop.Data;
-using backendShop.Interfaces;
+using backendShop.Interfaces.RepositoryInterfaces;
+using backendShop.Interfaces.ServiceInterfaces;
 using backendShop.Mapping;
 using backendShop.Repository;
 using backendShop.Services;
@@ -12,12 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -66,6 +69,7 @@ namespace backendShop
 
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -76,6 +80,7 @@ namespace backendShop
             services.AddSingleton(mapper);
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddCors(options =>
             {
@@ -103,6 +108,12 @@ namespace backendShop
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, Configuration["ImageStoragePath"])),
+                RequestPath = "/images" // This is the URL prefix for accessing the images
+            });
 
             app.UseEndpoints(endpoints =>
             {

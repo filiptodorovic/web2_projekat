@@ -4,8 +4,17 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { GoogleLogin } from '@react-oauth/google';
 import {loginUser} from '../services/UserService';
 import '../index.css'; // Import custom stylesheet
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
+  let navigate = useNavigate();
+    const logOut = () => {
+      localStorage.clear();
+      alert("Logged out!");
+      navigate("/");
+    };
+
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -32,7 +41,7 @@ const LoginPage = () => {
 
       alert("Successfully logged in!");
 
-      //history.push("/profile");
+      navigate("/profile");
     } catch (error) {
       if(error.response.data)
         alert(`[Error]: ${JSON.stringify(error.response.data.message)}`);

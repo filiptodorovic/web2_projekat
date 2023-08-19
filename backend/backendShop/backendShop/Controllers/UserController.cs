@@ -1,6 +1,8 @@
 ﻿using backendShop.DTO;
-using backendShop.Interfaces;
+using backendShop.Interfaces.ServiceInterfaces;
+using backendShop.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -133,6 +135,35 @@ namespace backendShop.Controllers
                 return BadRequest(new { Message = "No sellers in the DB!" });
             return Ok(sellers);
         }
+
+        [HttpPost("upload-profile-picture")]
+        [Authorize]
+        public async Task<IActionResult> UploadProfilePicture([FromBody] PhotoUploadDTO picture)
+        {
+            if (picture == null || picture.Picture==null)
+            {
+                return BadRequest(new { Message = "No picture provided" });
+            }
+
+            UserDTO user = null;
+
+
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+
+                user = await _userService.UploadImageToProfile(userId,picture);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (user == null)
+                return BadRequest();
+            return Ok(user);
+        }
+
 
     }
 }

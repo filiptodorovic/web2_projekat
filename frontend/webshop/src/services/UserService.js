@@ -18,7 +18,7 @@ export const loginUser = async (loginData) => {
 };
 
 export const fetchUserData = async () => {
-  return await await axios.get(
+  return await axios.get(
     `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/profile`, 
     {
       headers: {
@@ -28,7 +28,7 @@ export const fetchUserData = async () => {
 }
 
 export const getAllSellers = async () => {
-  return await await axios.get(
+  return await axios.get(
     `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/get-all-sellers`, 
     {
       headers: {
@@ -53,6 +53,18 @@ export const denySeller = async (seller) => {
   return await axios.post(
     `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/deny-seller`, 
     seller,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  );
+}
+
+export const uploadProfilePicture = async (image) => {
+  return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/upload-profile-picture`,
+    image,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`

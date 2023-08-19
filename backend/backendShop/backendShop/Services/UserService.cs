@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using backendShop.Data;
 using backendShop.DTO;
-using backendShop.Interfaces;
+using backendShop.Interfaces.RepositoryInterfaces;
+using backendShop.Interfaces.ServiceInterfaces;
 using backendShop.Models;
 using backendShop.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -95,7 +97,7 @@ namespace backendShop.Services
             }
 
 
-            User writtenUser = await _userRepository.Register(newUser);
+            User writtenUser = await _userRepository.AddUser(newUser);
 
             UserDTO retUserDTO = _mapper.Map<User, UserDTO>(writtenUser);
             return retUserDTO;
@@ -243,7 +245,42 @@ namespace backendShop.Services
             return retSellers;
         }
 
+        public async Task<UserDTO> UploadImageToProfile(int userId, PhotoUploadDTO photo)
+        {
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            User user = users.FirstOrDefault(u => u.UserId == userId);
+            if (user == null)
+                throw new Exception("User not found in the DB!");
+
+            if(photo==null || photo.Picture==null)
+                throw new Exception("Image cannot be null!");
+
+            string extension = ".jpg";
+            string fileName = Path.ChangeExtension(
+                Path.GetRandomFileName(),
+                extension
+            );
+
+            string path = String.Format("{0}{1}", _configuration["ImageStoragePath"], fileName);
+
+            using (var ms = new MemoryStream(photo.Picture))
+            {
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    ms.WriteTo(fs);
+                }
+            }
+
+            string imageAccessPath = String.Format("{0}{1}", _configuration["ImageAccessPath"], fileName);
 
 
+            user.PictureUrl = imageAccessPath;
+
+            await _userRepository.UpdateUser(user);
+
+            return _mapper.Map<User, UserDTO>(user);
+
+        }
     }
 }

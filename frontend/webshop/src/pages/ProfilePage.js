@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Navbar, Nav, Form, Button, Row, Col } from 'react-bootstrap';
 import '../index.css'; // Import custom stylesheet
-import { fetchUserData } from '../services/UserService';
+import { fetchUserData,uploadProfilePicture } from '../services/UserService';
 import User from '../models/User'
 
 const ProfilePage = () => {
 
+const [editedFile, setEditedFile] = useState([]);
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(new User()); // Initialize with an instance of User
@@ -44,8 +54,50 @@ const ProfilePage = () => {
     setIsEditing(false); // Exit editing mode
   };
 
-  const handlePictureUpload = (event) => {
-    // Handle picture upload logic here
+  const handlePictureUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setEditedFile({ ...editedFile, photoFile: file, photoUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+   const handleChangePhoto = async () => {
+    try {
+      // Create product data to send
+      const photoData = {
+        Picture: editedFile.photoFile ? await convertToBase64(editedFile.photoFile) : null
+      };
+
+      console.log("Photo data:",photoData);
+
+      // Add product via API call
+      const userData = await uploadProfilePicture(photoData);
+
+      console.log("Response:",userData);
+
+
+      const date = userData.data.dateOfBirth.split('T')[0];
+      setUser(new User(
+        userData.data.email,
+        userData.data.username,
+        userData.data.name,
+        userData.data.lastName,
+        date,
+        userData.data.address,
+        userData.data.userType,
+        userData.data.verificationStatus,
+        userData.data.pictureUrl
+      ));
+
+
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Handle error or update UI accordingly
+    }
   };
 
   const showUser = (param) => {
@@ -89,8 +141,12 @@ const ProfilePage = () => {
                 <Form>
                 <Form.Group controlId="pictureUpload">
                 <label for="formFile" class="form-label">Change/Upload picture</label>
-                <input class="form-control" type="file" id="formFile"/>
-                <Button variant="secondary" onClick={handleEditClick} class="wider-button">
+                <Form.Control
+                  type="file"
+                  accept=".jpg, .jpeg, .png" // Allow only image file types
+                  onChange={handlePictureUpload}
+                  />
+                <Button variant="secondary" onClick={handleChangePhoto} class="wider-button">
                     Upload
                 </Button>
                 </Form.Group>

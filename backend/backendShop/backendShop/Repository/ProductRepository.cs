@@ -8,38 +8,39 @@ using System.Threading.Tasks;
 
 namespace backendShop.Repository
 {
-    public class UserRepository : IUserRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly DataContext _context;
 
-        public UserRepository(DataContext context)
+        public ProductRepository(DataContext context)
         {
             _context = context;
         }
-        public async Task<User> AddUser(User u)
+
+        public async Task<bool> AddProduct(Product p)
         {
-            _context.Users.Add(u);
+            _context.Products.Add(p);
             try
             {
                 _context.SaveChanges();
-                return u;
+                return true;
             }
-            catch (Exception e) {
-                return null;
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<List<Product>> GetAllProducts()
         {
-            return _context.Users.ToList();
+            return _context.Products.ToList();
         }
 
-        public async Task<bool> UpdateUser(User u)
+        public async Task<bool> UpdateProduct(Product p)
         {
-            _context.Update(u);
+            _context.Update(p);
             _context.SaveChanges();
             return true;
-
         }
     }
 }

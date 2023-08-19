@@ -1,59 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
 import '../index.css';
+import Product from "../models/Product";
+import { addProduct,getAllProducts, removeProduct } from '../services/ProductService';
 
 const ManageProductsPage = () => {
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const [showModal, setShowModal] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'DC-9',
-      price: 23.0,
-      quantity: 50,
-      description: 'Description for Product 1',
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/NWA_DC-9_%28278668845%29.jpg',
-    },
-    {
-      id: 2,
-      name: 'DC-10',
-      price: 50.0,
-      quantity: 20,
-      description: 'Description for Product 1',
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Continental_Airlines_DC-10.jpg',
-    },
-    {
-      id: 3,
-      name: 'DC-8',
-      price: 40.0,
-      quantity: 60,
-      description: 'Description for Product 1',
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Douglas_DC-8_NASA_%28cropped%29.jpg',
-    },
+  const [products, setProducts] = useState([]);
+  const [emptyProduct, setEmptyProduct] = useState(new Product(null, '', 0.0, 0, '', ''));
+  const [editedProduct, setEditedProduct] = useState(new Product(null, '', 0.0, 0, '', ''));
 
-    // Add more dummy products...
-  ]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getAllProducts();
+        setProducts(response.data.$values);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    fetchProducts();
+  }, []);
+  
+  useEffect(() => {
+    console.log("Products updated:", products);
+  }, [products]);
 
-  const [emptyProduct, setEmptyProduct] = useState({
-    id: null,
-    name: '',
-    price: 0.0,
-    quantity: 0,
-    description: '',
-    photoUrl: '',
-  });
 
-  const [editedProduct, setEditedProduct] = useState({
-    id: null,
-    name: '',
-    price: 0.0,
-    quantity: 0,
-    description: '',
-    photoUrl: '',
-  });
+  const handlePhotoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setEditedProduct({ ...editedProduct, photoFile: file, photoUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAddProduct = async () => {
+    try {
+      // Create product data to send
+      const productData = {
+        name: editedProduct.name,
+        price: editedProduct.price,
+        amount: editedProduct.amount,
+        description: editedProduct.description,
+        picture: editedProduct.photoFile ? await convertToBase64(editedProduct.photoFile) : null,
+      };
+
+
+      console.log("Product data:",productData);
+
+      // Add product via API call
+      const receivedData = await addProduct(productData);
+
+      console.log("Products:",receivedData);
+
+      // Update UI state
+      setProducts(receivedData.data.$values);
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error adding product:', error);
+      // Handle error or update UI accordingly
+    }
+  };
 
   const handleShowModal = () => setShowModal(true);
 
-  const handleAddProduct = () => {
+  const handleOpenAddProductModal = () => {
     setEditedProduct(emptyProduct); // Reset editedProduct state
     setShowModal(true);
   };
@@ -74,18 +100,31 @@ const ManageProductsPage = () => {
     setShowModal(false);
   };
 
-  const handlePhotoUpload = () => {
-    // Implement add product logic here
+
+  const handleRemoveProduct = async (productId) => {
+    try{
+      const productData = {
+        productId: productId,
+      };
+    const products = await removeProduct(productData);
+
+    console.log("Products:",products);
+
+    // Update UI state
+    setProducts(products.data.$values);
+    }
+    catch (error) {
+      console.error('Error removing product:', error);
+    }
+
   };
 
-  const handleRemoveProduct = (id) => {
-    // Implement remove product logic here
-  };
+
 
   return (
     <Container>
       <h2 className="page-heading text-center manage-products-heading">Manage Products</h2>
-      <Button variant="primary" onClick={handleAddProduct}>
+      <Button variant="primary" onClick={handleOpenAddProductModal}>
         Add Product
       </Button>
       <Table bordered hover className="mt-3">
@@ -101,22 +140,22 @@ const ManageProductsPage = () => {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
+            <tr key={product.productId}>
+              <td>{product.productId}</td>
               <td>{product.name}</td>
               <td>{product.price}</td>
-              <td>{product.quantity}</td>
+              <td>{product.amount}</td>
               <td>{product.description}</td>
               <td>
                 <Button
                   variant="success"
-                  onClick={() => handleEditProduct(product.id)}
+                  onClick={() => handleEditProduct(product.productId)}
                 >
                   Edit
                 </Button>{' '}
                 <Button
                   variant="danger"
-                  onClick={() => handleRemoveProduct(product.id)}
+                  onClick={() => handleRemoveProduct(product.productId)}
                 >
                   Remove
                 </Button>
@@ -175,9 +214,9 @@ const ManageProductsPage = () => {
         <Form.Control
           type="number"
           placeholder="Enter product quantity"
-          value={editedProduct.quantity}
+          value={editedProduct.amount}
           onChange={(e) =>
-            setEditedProduct({ ...editedProduct, quantity: e.target.value })
+            setEditedProduct({ ...editedProduct, amount: e.target.value })
           }
         />
       </Form.Group>
