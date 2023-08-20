@@ -170,7 +170,7 @@ const ManageProductsPage = () => {
             <tr key={product.productId}>
               <td>{product.productId}</td>
               <td>{product.name}</td>
-              <td>{product.price}</td>
+              <td>${product.price} Million</td>
               <td>{product.amount}</td>
               <td>{product.description}</td>
               <td>

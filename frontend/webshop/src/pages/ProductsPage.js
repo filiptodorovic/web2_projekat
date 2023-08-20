@@ -1,83 +1,98 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import ProductCard from '../components/ProductCard';
 import ShoppingCart from './ShoppingCart';
+import {getAllProducts} from '../services/ProductService'
 
 const ProductPage = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'Product 1',
-      price: 10.0,
-      description: 'Description for Product 1',
-      seller: 'Seller A',
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/NWA_DC-9_%28278668845%29.jpg',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      price: 15.0,
-      description: 'Description for Product 2',
-      seller: 'Seller B',
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Continental_Airlines_DC-10.jpg',
-    },
-    {
-        id: 3,
-        name: 'Product 2',
-        price: 15.0,
-        description: 'Description for Product 2',
-        seller: 'Seller B',
-        photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Douglas_DC-8_NASA_%28cropped%29.jpg',
-    },
-    {
-        id: 4,
-        name: 'Product 1',
-        price: 10.0,
-        description: 'Description for Product 1',
-        seller: 'Seller A',
-        photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9e/Delta_Air_Lines_Boeing_737-832%3B_N3747D%40LAX%3B10.10.2011_622in_%286482376485%29.jpg',
-      },
-      {
-        id: 5,
-        name: 'Product 2',
-        price: 15.0,
-        description: 'Description for Product 2',
-        seller: 'Seller B',
-        photoUrl: 'https://static1.simpleflyingimages.com/wordpress/wp-content/uploads/2022/02/N727US_Boeing_727-223_Advanced_of_USAJet.jpeg',
-      },
-      {
-          id: 6,
-          name: 'Product 2',
-          price: 15.0,
-          description: 'Description for Product 2',
-          seller: 'Seller B',
-          photoUrl: 'https://cdn.airlines-inform.ru/upload/iblock/fa3/Boeing-717.JPG',
-      },
-      {
-        id: 7,
-        name: 'Product 1',
-        price: 10.0,
-        description: 'Description for Product 1',
-        seller: 'Seller A',
-        photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/31/Icelandair_Boeing_757-200_Wedelstaedt.jpg',
-      },
-      {
-        id: 8,
-        name: 'Product 2',
-        price: 15.0,
-        description: 'Description for Product 2',
-        seller: 'Seller B',
-        photoUrl: 'https://i.insider.com/62e54262205f7500187a11bc?width=1000&format=jpeg&auto=webp',
-      },
-      {
-          id: 9,
-          name: 'Product 2',
-          price: 15.0,
-          description: 'Description for Product 2',
-          seller: 'Seller B',
-          photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Emirates_B777-300ER_%28A6-ECU%29_%40_FCO%2C_July_2011.jpg',
-      },
-  ];
+  // const products = [
+  //   {
+  //     id: 1,
+  //     name: 'Product 1',
+  //     price: 10.0,
+  //     description: 'Description for Product 1',
+  //     seller: 'Seller A',
+  //     photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/NWA_DC-9_%28278668845%29.jpg',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Product 2',
+  //     price: 15.0,
+  //     description: 'Description for Product 2',
+  //     seller: 'Seller B',
+  //     photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Continental_Airlines_DC-10.jpg',
+  //   },
+  //   {
+  //       id: 3,
+  //       name: 'Product 2',
+  //       price: 15.0,
+  //       description: 'Description for Product 2',
+  //       seller: 'Seller B',
+  //       photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Douglas_DC-8_NASA_%28cropped%29.jpg',
+  //   },
+  //   {
+  //       id: 4,
+  //       name: 'Product 1',
+  //       price: 10.0,
+  //       description: 'Description for Product 1',
+  //       seller: 'Seller A',
+  //       photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9e/Delta_Air_Lines_Boeing_737-832%3B_N3747D%40LAX%3B10.10.2011_622in_%286482376485%29.jpg',
+  //     },
+  //     {
+  //       id: 5,
+  //       name: 'Product 2',
+  //       price: 15.0,
+  //       description: 'Description for Product 2',
+  //       seller: 'Seller B',
+  //       photoUrl: 'https://static1.simpleflyingimages.com/wordpress/wp-content/uploads/2022/02/N727US_Boeing_727-223_Advanced_of_USAJet.jpeg',
+  //     },
+  //     {
+  //         id: 6,
+  //         name: 'Product 2',
+  //         price: 15.0,
+  //         description: 'Description for Product 2',
+  //         seller: 'Seller B',
+  //         photoUrl: 'https://cdn.airlines-inform.ru/upload/iblock/fa3/Boeing-717.JPG',
+  //     },
+  //     {
+  //       id: 7,
+  //       name: 'Product 1',
+  //       price: 10.0,
+  //       description: 'Description for Product 1',
+  //       seller: 'Seller A',
+  //       photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/31/Icelandair_Boeing_757-200_Wedelstaedt.jpg',
+  //     },
+  //     {
+  //       id: 8,
+  //       name: 'Product 2',
+  //       price: 15.0,
+  //       description: 'Description for Product 2',
+  //       seller: 'Seller B',
+  //       photoUrl: 'https://i.insider.com/62e54262205f7500187a11bc?width=1000&format=jpeg&auto=webp',
+  //     },
+  //     {
+  //         id: 9,
+  //         name: 'Product 2',
+  //         price: 15.0,
+  //         description: 'Description for Product 2',
+  //         seller: 'Seller B',
+  //         photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Emirates_B777-300ER_%28A6-ECU%29_%40_FCO%2C_July_2011.jpg',
+  //     },
+  // ];
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getAllProducts();
+        setProducts(response.data.$values);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    fetchProducts();
+  }, []);
+  
 
   const [cartItems, setCartItems] = useState([]);
 
