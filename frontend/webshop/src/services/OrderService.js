@@ -14,3 +14,13 @@ export const checkoutOrder = async (orderData) => {
         }
     );
 }
+
+export const getAllOrders = async () => {
+    return await axios.get(
+        `${REACT_APP_BASE_URL}/${REACT_APP_ORDER_CONTROLLER}/get-all-orders`, 
+        {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+};
