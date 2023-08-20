@@ -194,7 +194,7 @@ namespace backendShop.Services
                 throw new Exception("The user is not seller!");
 
             if(user.VerificationStatus!=VerificationStatus.PENDING)
-                throw new Exception($"Seller cannot be {action.ToString()}");
+                throw new Exception($"Seller has already been {user.VerificationStatus.ToString()}");
 
 
 

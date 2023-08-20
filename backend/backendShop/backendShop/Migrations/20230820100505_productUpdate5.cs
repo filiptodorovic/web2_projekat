@@ -3,25 +3,35 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace backendShop.Migrations
 {
-    public partial class userUrlPicture : Migration
+    public partial class productUpdate5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<byte[]>(
-                name: "PictureUrl",
-                table: "Users",
+                name: "Picture",
+                table: "Products",
                 type: "varbinary(max)",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
                 oldNullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PictureUrl",
+                table: "Products",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "PictureUrl",
-                table: "Users",
+                table: "Products");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Picture",
+                table: "Products",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(byte[]),

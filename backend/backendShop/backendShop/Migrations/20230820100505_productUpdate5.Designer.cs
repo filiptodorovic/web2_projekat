@@ -10,8 +10,8 @@ using backendShop.Data;
 namespace backendShop.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230819201224_userUrlPicture")]
-    partial class userUrlPicture
+    [Migration("20230820100505_productUpdate5")]
+    partial class productUpdate5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,6 +92,9 @@ namespace backendShop.Migrations
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
@@ -146,8 +149,8 @@ namespace backendShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PictureUrl")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserType")
                         .IsRequired()

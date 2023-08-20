@@ -90,6 +90,9 @@ namespace backendShop.Migrations
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
@@ -144,8 +147,8 @@ namespace backendShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PictureUrl")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserType")
                         .IsRequired()

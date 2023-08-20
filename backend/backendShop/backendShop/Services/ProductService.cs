@@ -25,6 +25,26 @@ namespace backendShop.Services
             _configuration = configuration;
             _productRepository= productRepository;
         }
+
+        private string getSavedImagePath(byte[] image) {
+            string extension = ".jpg";
+            string fileName = Path.ChangeExtension(
+                Path.GetRandomFileName(),
+                extension
+            );
+
+            string path = String.Format("{0}{1}", _configuration["ImageStoragePath"], fileName);
+
+            using (var ms = new MemoryStream(image))
+            {
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    ms.WriteTo(fs);
+                }
+            }
+
+            return String.Format("{0}{1}", _configuration["ImageAccessPath"], fileName);
+        }
         public async Task<List<ProductDTO>> AddProduct(int sellerId, ProductDTO newProduct)
         {
             if (string.IsNullOrEmpty(newProduct.Name) || string.IsNullOrEmpty(newProduct.Description)
@@ -46,19 +66,7 @@ namespace backendShop.Services
 
             Product prod = _mapper.Map<ProductDTO, Product>(newProduct);
 
-            //using (var memoryStream = new MemoryStream())
-            //{
-            //    newProduct.Picture.CopyTo(memoryStream, 0);
-            //    var imageBytes = memoryStream.ToArray();
-            //    prod.Picture = imageBytes;
-
-            //}
-
-            //string extension = ".jpg";
-            //string fileName = Path.ChangeExtension(
-            //    Path.GetRandomFileName(),
-            //    extension
-            //);
+            prod.PictureUrl = getSavedImagePath(newProduct.Picture);
 
             prod.isDeleted = false;
             prod.UserId = sellerId;
@@ -134,6 +142,46 @@ namespace backendShop.Services
 
         }
 
+        public async Task<List<ProductDTO>> UpdateProduct(int sellerId, ProductDTO updatedProduct)
+        {
+            if (string.IsNullOrEmpty(updatedProduct.ProductId.ToString()))
+                throw new Exception("Product ID cannot be empty!");
 
+
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            User foundSeller = users.Find(u => u.UserId == sellerId);
+
+            if (foundSeller == null)
+                throw new Exception("Seller not found in the DB!");
+
+            List<Product> sellersProducts = await _productRepository.GetAllProducts();
+            sellersProducts = sellersProducts.FindAll(p => (p.UserId == sellerId && !p.isDeleted));
+            Product productToUpdate = sellersProducts.Find(p => p.ProductId == updatedProduct.ProductId);
+
+            if (productToUpdate==null)
+                throw new Exception("Product not found in the DB!");
+
+            productToUpdate.Name = updatedProduct.Name; 
+            productToUpdate.Price = updatedProduct.Price;
+            productToUpdate.Amount = updatedProduct.Amount;
+            productToUpdate.Description = updatedProduct.Description;
+            productToUpdate.Picture = updatedProduct.Picture;
+
+            productToUpdate.PictureUrl = getSavedImagePath(productToUpdate.Picture);
+
+            try
+            {
+                await _productRepository.UpdateProduct(productToUpdate);
+            }
+            catch (Exception ex) { throw ex; }
+
+            try
+            {
+                return await this.GetAllSellerProducts(sellerId);
+            }
+            catch (Exception ex) { throw ex; }
+
+        }
     }
 }

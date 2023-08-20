@@ -9,6 +9,7 @@ namespace backendShop.Interfaces.ServiceInterfaces
         Task<List<ProductDTO>> AddProduct(int sellerId, ProductDTO newProduct);
         Task<List<ProductDTO>> GetAllSellerProducts(int sellerId);
         Task<List<ProductDTO>> RemoveProduct(int sellerId, ProductDTO productToRemove);
+        Task<List<ProductDTO>> UpdateProduct(int sellerId, ProductDTO updatedProduct);
 
     }
 }

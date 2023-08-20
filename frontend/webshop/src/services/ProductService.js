@@ -50,3 +50,15 @@ export const removeProduct = async (productData) => {
         }
     );
 }
+
+export const updateProduct = async (productData) => {
+    return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_PRODUCT_CONTROLLER}/update-product`,
+        productData,
+        {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        }
+    );
+}

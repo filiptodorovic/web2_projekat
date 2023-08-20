@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
 import '../index.css';
 import Product from "../models/Product";
-import { addProduct,getAllProducts, removeProduct } from '../services/ProductService';
+import { addProduct,getAllProducts, removeProduct,updateProduct } from '../services/ProductService';
 
 const ManageProductsPage = () => {
 
@@ -85,13 +85,40 @@ const ManageProductsPage = () => {
   };
   
   const handleEditProduct = (id) => {
-    const productToEdit = products.find(product => product.id === id);
+    const productToEdit = products.find(product => product.productId === id);
     if (productToEdit) {
       setEditedProduct({
         ...productToEdit,
         photoFile: null, // Reset the photoFile property when editing
       });
       setShowModal(true);
+    }
+
+  };
+
+  
+
+  const handleSendEditedProduct = async () => {
+    try {
+      // Prepare updated product data
+      const updatedProductData = {
+        productId: editedProduct.productId,
+        name: editedProduct.name,
+        price: editedProduct.price,
+        amount: editedProduct.amount,
+        description: editedProduct.description,
+        picture: editedProduct.photoFile ? await convertToBase64(editedProduct.photoFile) : null,
+      };
+  
+      // Call the API to update the product
+      console.log("Sending updated product data:",updatedProductData);
+      const response = await updateProduct(updatedProductData);
+      console.log("Response:",response);
+      setProducts(response.data.$values);
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error updating product:', error);
+      // Handle error (e.g., show error message)
     }
   };
   
@@ -166,18 +193,18 @@ const ManageProductsPage = () => {
       </Table>
       <Modal show={showModal} onHide={handleCloseModal}>
   <Modal.Header closeButton>
-    <Modal.Title>{editedProduct.id ? 'Edit Product' : 'Add Product'}</Modal.Title>
+    <Modal.Title>{editedProduct.productId ? 'Edit Product' : 'Add Product'}</Modal.Title>
   </Modal.Header>
   <Modal.Body>
     <Form>
     <Form.Group controlId="productPhoto">
       {/* Display a small image preview */}
-      {(editedProduct.photoFile || editedProduct.photoUrl) && (
+      {(editedProduct.photoFile || editedProduct.pictureUrl) && (
         <div className="image-preview">
           <img
             src={editedProduct.photoFile
               ? URL.createObjectURL(editedProduct.photoFile)
-              : editedProduct.photoUrl}
+              : editedProduct.pictureUrl}
             alt="Product Preview"
             className="small-image-preview"
           />
@@ -240,6 +267,7 @@ const ManageProductsPage = () => {
         type="file"
         accept=".jpg, .jpeg, .png" // Allow only image file types
         onChange={handlePhotoUpload}
+        required 
         />
       </Form.Group>
       </Form>
@@ -248,8 +276,8 @@ const ManageProductsPage = () => {
         <Button variant="secondary" onClick={handleCloseModal}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleAddProduct}>
-          {editedProduct.id ? 'Save Changes' : 'Add'}
+        <Button variant="primary" onClick={editedProduct.productId ? handleSendEditedProduct : handleAddProduct}>
+          {editedProduct.productId ? 'Save Changes' : 'Add'}
         </Button>
       </Modal.Footer>
     </Modal>

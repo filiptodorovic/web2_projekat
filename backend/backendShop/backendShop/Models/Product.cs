@@ -11,6 +11,7 @@ namespace backendShop.Models
         public int Amount { get; set; }
         public string Description { get; set; }
         public byte[] Picture { get; set; }
+        public string PictureUrl { get; set; }
         public string SellerEmail { get; set; }
         public virtual User User { get; set; }
         public int UserId { get; set; }

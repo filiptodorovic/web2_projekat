@@ -89,5 +89,28 @@ namespace backendShop.Controllers
                 return BadRequest(new { Message = "No products in the DB!" });
             return Ok(products);
         }
+
+        [HttpPost("update-product")]
+        [Authorize]
+        //add roles
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO product)
+        {
+            List<ProductDTO> products = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                products = await _productService.UpdateProduct(userId, product);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+
+            }
+
+            if (products == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(products);
+        }
     }
 }
