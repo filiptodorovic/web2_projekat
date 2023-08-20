@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Table, Button, Form } from 'react-bootstrap';
+import {checkoutOrder} from '../services/OrderService'
+import Order from '../models/Order'
+import OrderItem from '../models/OrderItem'
 
 const ShoppingCart = ({cartItems,removeFromCart,updateQuantity,setCartItems}) => {
 
@@ -11,10 +14,34 @@ const calculateTotalAmount = () => {
   return cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
 };
 
-const handleCheckout = () => {
-  console.log('Checkout:', cartItems, address, comment);
+const handleCheckout = async () => {
+  const orderItems = cartItems.map((item) => new OrderItem(item.product.productId, item.quantity));
+  try {
+    const order = new Order(
+      0,
+      new Date(),
+      comment,
+      address,
+      0,
+      0,
+      orderItems
+    );
 
-  
+    console.log('Checkout items:', order);
+
+    // Make the API call to send the order data
+    const response = await checkoutOrder(order);
+
+    if (response.ok) {
+      setCartItems([]); // Clear the cart
+      setAddress('');
+      setComment('');
+    } else {
+      // Handle error
+    }
+  } catch (error) {
+    console.log('Error :', error);
+  }
 
 
   setCartItems([]);
@@ -79,7 +106,7 @@ return (
     </Form>
 
     <div className="total-amount">
-     <h4>Total Amount: ${calculateTotalAmount().toFixed(2)}</h4>
+     <h4>Total Amount: ${calculateTotalAmount().toFixed(2)} + delivery</h4>
     </div>
 
     <Button variant="primary" onClick={handleCheckout}>Checkout</Button>

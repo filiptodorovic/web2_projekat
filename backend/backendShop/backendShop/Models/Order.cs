@@ -10,7 +10,7 @@ namespace backendShop.Models
         public bool IsCancelled { get; set; }
         public string Comment { get; set; }
         public string Address { get; set; }
-        public int TotalCost { get; set; }
+        public float TotalCost { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
 

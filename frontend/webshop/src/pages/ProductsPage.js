@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import ProductCard from '../components/ProductCard';
-import ShoppingCart from './ShoppingCart';
+import ShoppingCart from '../components/ShoppingCart';
 import {getAllProducts} from '../services/ProductService'
 
 const ProductPage = () => {
@@ -52,7 +52,7 @@ const ProductPage = () => {
       removeFromCart(product);
     } else {
       const updatedCart = cartItems.map(item => (
-        item.productId === product.productId ? { ...item, quantity: newQuantity } : item
+        item.product.id === product.productId ? { ...item, quantity: newQuantity } : item
       ));
       setCartItems(updatedCart);
     }

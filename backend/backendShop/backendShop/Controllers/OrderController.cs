@@ -23,25 +23,20 @@ namespace backendShop.Controllers
 
         [HttpPost("checkout")]
         [Authorize]
-        //add roles
-        public async Task<IActionResult> Checkout([FromBody] ProductDTO product)
+        public async Task<IActionResult> Checkout([FromBody] OrderDTO order)
         {
-            //List<ProductDTO> products = null;
-            //try
-            //{
-            //    int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
-            //    products = await _productService.AddProduct(userId, product);
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                await _orderService.CreateOrder(userId, order);
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
 
-            //}
+            }
 
-            //if (products == null)
-            //    return BadRequest(new { Message = "No products in the DB!" });
-            //return Ok(products);
             return Ok();
         }
     }

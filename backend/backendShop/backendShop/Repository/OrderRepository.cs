@@ -12,6 +12,20 @@ namespace backendShop.Repository
         public OrderRepository(DataContext context) { 
             _context = context;
         }
+
+        public async Task<bool> AddOrder(Order o)
+        {
+            _context.Orders.Add(o);
+            try
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 
 }
