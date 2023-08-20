@@ -18,33 +18,17 @@ namespace backendShop.Services
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IProductRepository _productRepository;
-        public ProductService(IProductRepository productRepository,IUserRepository userRepo, IMapper mapper, IConfiguration configuration)
+        private readonly IHelperService _helperService;
+        public ProductService(IProductRepository productRepository,IUserRepository userRepo, IMapper mapper, IConfiguration configuration, IHelperService helperService)
         {
             _userRepository = userRepo;
             _mapper = mapper;
             _configuration = configuration;
             _productRepository= productRepository;
+            _helperService= helperService;
         }
 
-        private string getSavedImagePath(byte[] image) {
-            string extension = ".jpg";
-            string fileName = Path.ChangeExtension(
-                Path.GetRandomFileName(),
-                extension
-            );
-
-            string path = String.Format("{0}{1}", _configuration["ImageStoragePath"], fileName);
-
-            using (var ms = new MemoryStream(image))
-            {
-                using (var fs = new FileStream(path, FileMode.Create))
-                {
-                    ms.WriteTo(fs);
-                }
-            }
-
-            return String.Format("{0}{1}", _configuration["ImageAccessPath"], fileName);
-        }
+        
         public async Task<List<ProductDTO>> AddProduct(int sellerId, ProductDTO newProduct)
         {
             if (string.IsNullOrEmpty(newProduct.Name) || string.IsNullOrEmpty(newProduct.Description)
@@ -66,7 +50,7 @@ namespace backendShop.Services
 
             Product prod = _mapper.Map<ProductDTO, Product>(newProduct);
 
-            prod.PictureUrl = getSavedImagePath(newProduct.Picture);
+            prod.PictureUrl = await _helperService.GetSavedImagePath(newProduct.Picture);
 
             prod.isDeleted = false;
             prod.UserId = sellerId;
@@ -168,7 +152,7 @@ namespace backendShop.Services
             productToUpdate.Description = updatedProduct.Description;
             productToUpdate.Picture = updatedProduct.Picture;
 
-            productToUpdate.PictureUrl = getSavedImagePath(productToUpdate.Picture);
+            productToUpdate.PictureUrl = await _helperService.GetSavedImagePath(productToUpdate.Picture);
 
             try
             {
@@ -182,6 +166,17 @@ namespace backendShop.Services
             }
             catch (Exception ex) { throw ex; }
 
+        }
+
+        public async Task<List<ProductDTO>> GetAllProducts()
+        {
+            try
+            {
+                List<Product> prods = await _productRepository.GetAllProducts();
+                prods = prods.FindAll(p => !p.isDeleted);
+                return _mapper.Map<List<Product>, List<ProductDTO>>(prods);
+            }
+            catch (Exception ex) { throw ex; }
         }
     }
 }

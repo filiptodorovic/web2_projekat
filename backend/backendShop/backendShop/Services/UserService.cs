@@ -30,41 +30,12 @@ namespace backendShop.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public UserService(IUserRepository repo, IMapper mapper, IConfiguration configuration) { 
+        private readonly IHelperService _helperService;
+        public UserService(IUserRepository repo, IMapper mapper, IConfiguration configuration, IHelperService helperService) { 
             _userRepository=repo;
             _mapper = mapper;
             _configuration = configuration;
-        }
-
-        static string ComputeSha256Hash(string rawData)
-        {
-            // Create a SHA256
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                // ComputeHash - returns byte array
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-
-                // Convert byte array to a string
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
-        public void SendEmail(string recepient, string message) {
-            string sender = _configuration["EmailService:SenderEmail"];
-            var smtpClient = new SmtpClient(_configuration["EmailService:SMTPClient"])
-            {
-                Port = 587,
-                Credentials = new NetworkCredential(sender, _configuration["EmailService:SenderPass"]),
-                EnableSsl = true,
-            };
-
-            smtpClient.Send(sender, recepient, "[Web2Store] Verification status", message);
-
+            _helperService = helperService;
         }
 
 
@@ -80,7 +51,7 @@ namespace backendShop.Services
             User newUser = new User();
 
             if (regdata!=null) {
-                newUser.Password = ComputeSha256Hash(regdata.Password);
+                newUser.Password = await _helperService.ComputeSha256Hash(regdata.Password);
                 newUser.Email = regdata.Email;
                 newUser.PictureUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
                 newUser.Name = regdata.Name;
@@ -119,7 +90,7 @@ namespace backendShop.Services
             if (foundUser==null)
                 throw new Exception("The user with given email does not exist!");
 
-            if(!foundUser.Password.Equals(ComputeSha256Hash(loginData.Password)))
+            if(!foundUser.Password.Equals(await _helperService.ComputeSha256Hash(loginData.Password)))
                 throw new Exception("Invalid password!");
 
 
@@ -221,7 +192,7 @@ namespace backendShop.Services
 
             try
             {
-                SendEmail("trecagodinapsi@gmail.com", message);// I am using a personal email so I don't spam people
+                _helperService.SendEmail("trecagodinapsi@gmail.com", message);// I am using a personal email so I don't spam people
             }
             catch (Exception ex) { 
                 //Do nothing :(

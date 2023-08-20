@@ -70,6 +70,7 @@ namespace backendShop
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -81,6 +82,8 @@ namespace backendShop
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IHelperService, HelperService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddCors(options =>
             {

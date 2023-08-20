@@ -9,6 +9,7 @@ namespace backendShop.Mapping
         public MappingProfile() {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap();
         } 
     }
 }

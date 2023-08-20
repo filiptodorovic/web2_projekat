@@ -52,11 +52,22 @@ const [editedFile, setEditedFile] = useState([]);
   const handleSaveClick = async () => {
       try {
         console.log("Sending edited user:",editedUser);
-        const response = await updateUserProfile(editedUser);
+        const userData = await updateUserProfile(editedUser);
     
 
-        console.log("Got back user data:",response);
-        setUser(response.data);
+        console.log("Got back user data:",userData);
+        const date = userData.data.dateOfBirth.split('T')[0];
+        setUser(new User(
+          userData.data.email,
+          userData.data.username,
+          userData.data.name,
+          userData.data.lastName,
+          date,
+          userData.data.address,
+          userData.data.userType,
+          userData.data.verificationStatus,
+          userData.data.pictureUrl
+        ));
         setIsEditing(false); 
 
       } catch (error) {

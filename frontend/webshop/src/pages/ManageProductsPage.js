@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
 import '../index.css';
 import Product from "../models/Product";
-import { addProduct,getAllProducts, removeProduct,updateProduct } from '../services/ProductService';
+import { addProduct,getAllSellersProducts, removeProduct,updateProduct } from '../services/ProductService';
 
 const ManageProductsPage = () => {
 
@@ -23,7 +23,7 @@ const ManageProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getAllProducts();
+        const response = await getAllSellersProducts();
         setProducts(response.data.$values);
       } catch (error) {
         console.error('Error fetching products:', error);

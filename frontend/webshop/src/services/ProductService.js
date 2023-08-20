@@ -5,9 +5,19 @@ const REACT_APP_PRODUCT_CONTROLLER = process.env.REACT_APP_PRODUCT_CONTROLLER;
 
 
 
-export const getAllProducts = async () => {
+export const getAllSellersProducts = async () => {
     return await axios.get(
         `${REACT_APP_BASE_URL}/${REACT_APP_PRODUCT_CONTROLLER}/get-all-seller-products`, 
+        {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+};
+
+export const getAllProducts = async () => {
+    return await axios.get(
+        `${REACT_APP_BASE_URL}/${REACT_APP_PRODUCT_CONTROLLER}/get-all-products`, 
         {
             headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`

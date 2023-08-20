@@ -9,7 +9,7 @@ const ProductCard = ({ product, addToCart }) => {
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>Price: ${product.price.toFixed(2)}</Card.Text>
         <Card.Text>{product.description}</Card.Text>
-        <Card.Text>Seller: {product.seller}</Card.Text>
+        {/* <Card.Text>Seller: {product.seller}</Card.Text> */}
         <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
       </Card.Body>
     </Card>

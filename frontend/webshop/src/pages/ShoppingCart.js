@@ -2,26 +2,6 @@ import React, { useState } from 'react';
 import { Container, Table, Button, Form } from 'react-bootstrap';
 
 const ShoppingCart = ({cartItems,removeFromCart,updateQuantity,setCartItems}) => {
-  // const [address, setAddress] = useState('');
-  // const [comment, setComment] = useState('');
-
-  // const removeFromCart = (product) => {
-  //   // Implement the remove from cart logic here
-  // };
-
-  // const updateQuantity = (product, newQuantity) => {
-  //   // Implement the update quantity logic here
-  // };
-
-  // const calculateTotalAmount = () => {
-  //     //return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  //     return 0;
-  // };
-
-  // const handleCheckout = () => {
-  //   // Implement the checkout logic here
-  // };
-
 
 const [address, setAddress] = useState('');
 const [comment, setComment] = useState('');
@@ -32,9 +12,11 @@ const calculateTotalAmount = () => {
 };
 
 const handleCheckout = () => {
-  // Implement checkout logic here (e.g., sending the order to the server)
   console.log('Checkout:', cartItems, address, comment);
-  // Clear the cart and reset fields after checkout
+
+  
+
+
   setCartItems([]);
   setAddress('');
   setComment('');

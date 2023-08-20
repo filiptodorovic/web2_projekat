@@ -67,6 +67,28 @@ namespace backendShop.Controllers
             return Ok(products);
         }
 
+        [HttpGet("get-all-products")]
+        [Authorize]
+        //add roles
+        public async Task<IActionResult> GetAllProducts()
+        {
+            List<ProductDTO> products = null;
+            try
+            {
+                products = await _productService.GetAllProducts();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+
+            }
+
+            if (products == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(products);
+        }
+
         [HttpPost("remove-product")]
         [Authorize]
         //add roles
