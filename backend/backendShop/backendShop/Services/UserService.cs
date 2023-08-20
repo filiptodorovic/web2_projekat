@@ -282,5 +282,42 @@ namespace backendShop.Services
             return _mapper.Map<User, UserDTO>(user);
 
         }
+
+        public async Task<UserDTO> EditUser(int id, UserDTO updateData)
+        {
+            List<User>? users = await _userRepository.GetAllUsers();
+            User user = users.FirstOrDefault(u => u.UserId == id);
+
+            if (user == null)
+                throw new Exception("User not found in the DB!");
+
+            if (updateData.Username!=null)
+                user.Username = updateData.Username;
+
+            if (updateData.Email != null)
+                user.Email = updateData.Email;
+
+            if (updateData.Name != null)
+                user.Name = updateData.Name;
+
+            if (updateData.LastName != null)
+                user.LastName = updateData.LastName;
+
+            if (updateData.DateOfBirth <= DateTime.MinValue) {
+                int year = updateData.DateOfBirth.Year;
+                int month = updateData.DateOfBirth.Month;
+                int day = updateData.DateOfBirth.Day;
+
+                user.DateOfBirth = string.Format("{0}-{1}-{2}",year,month,day);
+
+            }
+
+            if (updateData.Address != null)
+                user.Address = updateData.Address;
+
+            await _userRepository.UpdateUser(user);
+
+            return _mapper.Map<User, UserDTO>(user);
+        }
     }
 }

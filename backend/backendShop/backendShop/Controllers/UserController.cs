@@ -164,6 +164,25 @@ namespace backendShop.Controllers
             return Ok(user);
         }
 
+        [HttpPost("update-profile")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditUser([FromBody] UserDTO userData)
+        {
+            UserDTO writtenUser = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                writtenUser = await _userService.EditUser(userId,userData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            if (writtenUser == null)
+                return BadRequest();
+            return Ok(writtenUser);
+        }
+
 
     }
 }

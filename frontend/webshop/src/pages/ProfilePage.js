@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Navbar, Nav, Form, Button, Row, Col } from 'react-bootstrap';
 import '../index.css'; // Import custom stylesheet
-import { fetchUserData,uploadProfilePicture } from '../services/UserService';
+import { fetchUserData,uploadProfilePicture,updateUserProfile } from '../services/UserService';
 import User from '../models/User'
 
 const ProfilePage = () => {
@@ -19,6 +19,7 @@ const [editedFile, setEditedFile] = useState([]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(new User()); // Initialize with an instance of User
+  const [editedUser, setEditedUser] = useState({...user});
 
   useEffect(() => {
     const getUserData = async () => {
@@ -48,8 +49,19 @@ const [editedFile, setEditedFile] = useState([]);
     setIsEditing(true);
   };
 
-  const handleSaveClick = () => {
-    // Perform save/update logic here
+  const handleSaveClick = async () => {
+      try {
+        console.log("Sending edited user:",editedUser);
+        const response = await updateUserProfile(editedUser);
+    
+
+        console.log("Got back user data:",response);
+        setUser(response.data);
+        setIsEditing(false); 
+
+      } catch (error) {
+        console.error('Error updating user profile:', error);
+      }
 
     setIsEditing(false); // Exit editing mode
   };
@@ -173,25 +185,32 @@ const [editedFile, setEditedFile] = useState([]);
             <Form>
                 <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" value={user.email} readOnly={!isEditing} disabled={!isEditing}/>
+                <Form.Control type="email" defaultValue={user.email} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}/>
                 </Form.Group>
-            </Form>
-            <Form>
+
                 <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" value={user.username} readOnly={!isEditing} disabled={!isEditing}/>
+                <Form.Control type="text" defaultValue={user.username} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, username: e.target.value })}/>
                 </Form.Group>
-            </Form>
-            <Form>
+                
+                <Form.Group controlId="name">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" defaultValue={user.name} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}/>
+                </Form.Group>
+
+                <Form.Group controlId="lastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" defaultValue={user.lastName} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, lastName: e.target.value })}/>
+                </Form.Group>
+
                 <Form.Group controlId="dateofbirth">
                 <Form.Label>Date of birth</Form.Label>
-                <Form.Control type="date" value={user.dateOfBirth} readOnly={!isEditing} disabled={!isEditing}/>
+                <Form.Control type="date" defaultValue={user.dateOfBirth} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, dateOfBirth: e.target.value })}/>
                 </Form.Group>
-            </Form>
-            <Form>
+                
                 <Form.Group controlId="address">
                 <Form.Label>Address</Form.Label>
-                <Form.Control type="text" value={user.email} readOnly={!isEditing} disabled={!isEditing}/>
+                <Form.Control type="text" defaultValue={user.address} readOnly={!isEditing} disabled={!isEditing} onChange={(e) => setEditedUser({ ...editedUser, address: e.target.value })}/>
                 </Form.Group>
             </Form>
 

@@ -72,3 +72,15 @@ export const uploadProfilePicture = async (image) => {
     }
   );
 }
+
+export const updateUserProfile = async (userData) => {
+  return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/update-profile`,
+    userData,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }
+  );
+};
