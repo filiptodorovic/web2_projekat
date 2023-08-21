@@ -3,6 +3,8 @@ using backendShop.Interfaces.RepositoryInterfaces;
 using backendShop.Models;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace backendShop.Repository
 {
@@ -25,6 +27,11 @@ namespace backendShop.Repository
             {
                 throw e;
             }
+        }
+
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return _context.Orders.ToList();
         }
     }
 

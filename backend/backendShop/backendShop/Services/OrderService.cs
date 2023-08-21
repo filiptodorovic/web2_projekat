@@ -94,5 +94,17 @@ namespace backendShop.Services
 
             return true;
         }
+
+        public async Task<List<OrderDTO>> GetAllOrders()
+        {
+            List<Order> orderList = null;
+            try
+            {
+                orderList = await _orderRepository.GetAllOrders();
+            }
+            catch (Exception ex) { throw ex; }
+
+            return _mapper.Map<List<Order>,List<OrderDTO>>(orderList);
+        }
     }
 }

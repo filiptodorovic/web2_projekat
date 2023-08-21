@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using backendShop.Services;
+using backendShop.Models;
 
 namespace backendShop.Controllers
 {
@@ -38,6 +39,26 @@ namespace backendShop.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpGet("get-all-orders")]
+        [Authorize]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            List<OrderDTO> orders = null;
+            try
+            {
+                orders =await _orderService.GetAllOrders();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (orders == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(orders);
         }
     }
 
