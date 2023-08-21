@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {Container,Nav,Navbar,Button,Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
-const CustomNavbar = (cartItems) => {
+const CustomNavbar = ({userRole}) => {
 
     let navigate = useNavigate();
     const logOut = () => {
@@ -18,23 +18,21 @@ const CustomNavbar = (cartItems) => {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/profile">Profile</Nav.Link>
-              <Nav.Link href="/seller-verification">Seller Verification</Nav.Link>
-              <Nav.Link href="/manage-products">Manage Products</Nav.Link>
-              <Nav.Link href="/new-orders">New Orders</Nav.Link>
-              <Nav.Link href="/my-orders">My Orders</Nav.Link>
-              <Nav.Link href="/all-orders">All Orders</Nav.Link>
-              <Nav.Link href="/previous-orders">Previous Orders</Nav.Link>
-              <Nav.Link href="/products">Products</Nav.Link>
-              {/* <Button variant="outline-primary" onClick={handleShowCartModal}>
-                Cart
-              </Button> */}
+              { userRole &&<Nav.Link href="/profile">Profile</Nav.Link>}
+              { userRole==='ADMIN' &&<Nav.Link href="/seller-verification">Seller Verification</Nav.Link>}
+              { userRole==='SELLER' &&<Nav.Link href="/manage-products">Manage Products</Nav.Link>}
+              { userRole==='SELLER' &&<Nav.Link href="/new-orders">New Orders</Nav.Link>}
+              { userRole==='SELLER' &&<Nav.Link href="/my-orders">My Orders</Nav.Link>}
+              { userRole==='ADMIN' &&<Nav.Link href="/all-orders">All Orders</Nav.Link>}
+              { userRole==='BUYER' &&<Nav.Link href="/previous-orders">Previous Orders</Nav.Link>}
+              { userRole==='BUYER' &&<Nav.Link href="/products">Products</Nav.Link>}
             </Nav>
-            <Nav>
+            {userRole && <Nav>
                 <Nav.Link href="/">
                   <Button variant="outline-danger" onClick={logOut}>Log Out</Button>
                 </Nav.Link>
             </Nav>
+            }
           </Navbar.Collapse>
         </Container>
       </Navbar>

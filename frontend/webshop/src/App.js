@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LandingPageButtons from './components/LandingPageButtons';
@@ -13,12 +13,25 @@ import MyOrdersPage from './pages/MyOrdersPage';
 import AllOrdersPage from './pages/AllOrdersPage';
 import PreviousOrdersPage from './pages/PreviousOrdersPage';
 import ProductsPage from './pages/ProductsPage';
+import jwtDecode from 'jwt-decode';
 
 function App() {
+  const [userRole, setUserRole] = useState(null); // Initialize state using useState
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      console.log(role);
+      setUserRole(role);
+    }
+  }, []); // Use useEffect to fetch data on component mount
+
   require('dotenv').config()
   return (
     <Router>
-      <CustomNavbar/>
+      <CustomNavbar userRole={userRole}/>
       <Routes>
         <Route path="/" element={<LandingPageButtons />} />
         <Route path="/login" element={<LoginPage />} />
