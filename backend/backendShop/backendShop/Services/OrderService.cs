@@ -104,7 +104,43 @@ namespace backendShop.Services
             }
             catch (Exception ex) { throw ex; }
 
+            List<OrderProduct> orderItems = await _orderRepository.GetAllOrderItems();
+            List<Product> products = await _productRepository.GetAllProducts();
+
+            foreach (var order in orderList)
+            {
+                order.OrderItems = orderItems.FindAll(oi => oi.OrderId == order.OrderId);
+
+                for(int i=0;i<order.OrderItems.Count;i++)
+                {
+                    order.OrderItems[i].Product = products.Find(p=>p.ProductId == order.OrderItems[i].ProductId);
+                }
+            }
+
+            
+
             return _mapper.Map<List<Order>,List<OrderDTO>>(orderList);
+        }
+
+        public async Task<List<OrderDTO>> GetAllUserOrders(int userId)
+        {
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            User foundBuyer = users.Find(u => u.UserId == userId);
+
+            if (foundBuyer == null)
+                throw new Exception("Buyer not found in the DB!");
+
+            List<Order> orders = await _orderRepository.GetAllOrders();
+            List<OrderProduct> orderItems = await _orderRepository.GetAllOrderItems();
+
+            List<Order> userOrders = orders.FindAll(p => (p.UserId == userId && !p.IsCancelled));
+
+            foreach (var order in userOrders) {
+                order.OrderItems = orderItems.FindAll(oi => oi.OrderId == order.OrderId);
+            }
+
+            return _mapper.Map<List<Order>, List<OrderDTO>>(userOrders);
         }
     }
 }

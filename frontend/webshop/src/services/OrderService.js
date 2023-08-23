@@ -24,3 +24,13 @@ export const getAllOrders = async () => {
             },
         });
 };
+
+export const getAllUserOrders = async () => {
+    return await axios.get(
+        `${REACT_APP_BASE_URL}/${REACT_APP_ORDER_CONTROLLER}/get-all-user-orders`, 
+        {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+};

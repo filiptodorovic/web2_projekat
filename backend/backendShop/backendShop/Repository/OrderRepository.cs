@@ -29,6 +29,11 @@ namespace backendShop.Repository
             }
         }
 
+        public async Task<List<OrderProduct>> GetAllOrderItems()
+        {
+            return _context.OrderItems.ToList();
+        }
+
         public async Task<List<Order>> GetAllOrders()
         {
             return _context.Orders.ToList();

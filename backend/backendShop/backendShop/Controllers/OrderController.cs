@@ -60,6 +60,27 @@ namespace backendShop.Controllers
                 return BadRequest(new { Message = "No products in the DB!" });
             return Ok(orders);
         }
+
+        [HttpGet("get-all-user-orders")]
+        [Authorize]
+        public async Task<IActionResult> GetAllUserOrders()
+        {
+            List<OrderDTO> orders = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                orders = await _orderService.GetAllUserOrders(userId);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (orders == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(orders);
+        }
     }
 
 
