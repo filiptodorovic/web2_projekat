@@ -9,5 +9,7 @@ namespace backendShop.Interfaces.RepositoryInterfaces
         Task<bool> AddOrder(Order o);
         Task<List<Order>> GetAllOrders();
         Task<List<OrderProduct>> GetAllOrderItems();
+        Task<bool> UpdateOrder(Order o);
+
     }
 }

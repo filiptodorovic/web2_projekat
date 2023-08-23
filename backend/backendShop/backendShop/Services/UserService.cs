@@ -5,6 +5,7 @@ using backendShop.Interfaces.RepositoryInterfaces;
 using backendShop.Interfaces.ServiceInterfaces;
 using backendShop.Models;
 using backendShop.Repository;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -289,6 +290,72 @@ namespace backendShop.Services
             await _userRepository.UpdateUser(user);
 
             return _mapper.Map<User, UserDTO>(user);
+        }
+
+        public async Task<UserDTO> GoogleRegisterUser(RegistrationDataDTO regdata)
+        {
+            List<User>? users = await _userRepository.GetAllUsers();
+
+            if (users.Find(u => u.Email == regdata.Email) != null || users.Find(u => u.Username == regdata.Username) != null)
+                throw new Exception("Email and/or username already in use!");
+
+            User newUser = new User();
+
+            newUser.Email = regdata.Email;
+            newUser.Name = regdata.Name;
+            newUser.LastName = regdata.LastName;
+            newUser.Username = regdata.Email;
+            //Only buyers can register via google :/
+            newUser.UserType = UserType.BUYER;
+            newUser.DateOfBirth = "1970-01-01";
+            newUser.Address = "<Enter Address Here>";
+            newUser.Password = await _helperService.ComputeSha256Hash(newUser.Email);
+
+            User writtenUser = await _userRepository.AddUser(newUser);
+
+            UserDTO retUserDTO = _mapper.Map<User, UserDTO>(writtenUser);
+            return retUserDTO;
+        }
+
+        public async Task<string> GoogleLoginUser(string GoogleLoginToken)
+        {
+            try
+            {
+                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>() { _configuration["GoogleClientID"] }
+                };
+
+                var googleUserInfo = await GoogleJsonWebSignature.ValidateAsync(GoogleLoginToken, validationSettings);
+
+                List<User>? users = await _userRepository.GetAllUsers();
+
+                User foundUser = users.Find(u => u.Email == googleUserInfo.Email);
+
+                var claims = new[] {
+                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
+                    new Claim("UserId",foundUser.UserId.ToString()),
+                    new Claim("Email",foundUser.Email.ToString()),
+                    new Claim(ClaimTypes.Role,foundUser.UserType.ToString().ToUpper()),
+                    new Claim("VerificationStatus",foundUser.VerificationStatus.ToString().ToUpper())
+                };
+
+
+                SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+                var signIn = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    _configuration["JWT:Issuer"],
+                    _configuration["JWT:Audience"],
+                    claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: signIn);
+
+                return new JwtSecurityTokenHandler().WriteToken(token);
+
+            }
+            catch (Exception ex) { throw ex; }
         }
     }
 }

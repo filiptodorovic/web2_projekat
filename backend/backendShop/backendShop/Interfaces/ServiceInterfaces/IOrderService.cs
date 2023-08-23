@@ -9,5 +9,8 @@ namespace backendShop.Interfaces.ServiceInterfaces
         Task<bool> CreateOrder(int id, OrderDTO newOrder);
         Task<List<OrderDTO>> GetAllOrders();
         Task<List<OrderDTO>> GetAllUserOrders(int userId);
+        Task<List<OrderDTO>> CancelOrder(int userId, int orderId);
+        Task<List<OrderDTO>> GetSellerNewOrders(int userId);
+        Task<List<OrderDTO>> GetSellerOldOrders(int userId);
     }
 }

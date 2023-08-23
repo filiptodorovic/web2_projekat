@@ -1,98 +1,65 @@
 import React,  { useState, useEffect } from 'react';
 import { Container, Accordion, Card, Button } from 'react-bootstrap';
-import {getAllUserOrders} from '../services/OrderService'
+import {getAllUserOrders,cancelOrder} from '../services/OrderService';
+import Order from '../models/Order'
 
 const PreviousOrdersPage = () => {
-  // const orders = [
-  //   {
-  //       id: 1,
-  //       timestamp: '2023-08-27 12:30 PM',
-  //       customer: {
-  //         name: 'John Doe',
-  //         email: 'john@example.com',
-  //         address: '123 Main St, City',
-  //       },
-  //       comment: 'Please deliver before 5 PM',
-  //       items: [
-  //         { name: 'Product 1', quantity: 2, price: 10.0 },
-  //         { name: 'Product 2', quantity: 3, price: 15.0 },
-  //       ],
-  //       totalAmount: 55.0,
-  //     },
-  //     {
-  //       id: 2,
-  //       timestamp: '2023-08-28 2:45 PM',
-  //       customer: {
-  //         name: 'Jane Smith',
-  //         email: 'jane@example.com',
-  //         address: '456 Elm St, Town',
-  //       },
-  //       comment: 'Handle with care',
-  //       items: [
-  //         { name: 'Product 3', quantity: 1, price: 20.0 },
-  //         { name: 'Product 4', quantity: 2, price: 25.0 },
-  //       ],
-  //       totalAmount: 70.0,
-  //     },
-  //     {
-  //       id: 3,
-  //       timestamp: '2023-08-30 12:00 AM',
-  //       customer: {
-  //         name: 'Michael Johnson',
-  //         email: 'michael@example.com',
-  //         address: '789 Oak Ave, Village',
-          
-  //       },
-  //       comment: '',
-  //       items: [
-  //         { name: 'Product 2', quantity: 5, price: 15.0 },
-  //       ],
-  //       totalAmount: 75.0,
-  //     }
-  // ];
-
   const [orders, setOrders] = useState([]);
   const [remainingTime, setRemainingTime] = useState({});
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const getOrders = async () => {
       try {
         const response = await getAllUserOrders();
-        console.log(response);
         setOrders(response.data.$values);
-        console.log("Orders: ", response.data.$values);
-  
-        // Calculate remaining time and update state
-        const now = new Date();
-        const updatedRemainingTime = {};
-  
-        response.data.$values.forEach((order) => {
-          const deliveryTime = new Date(order.timestamp);
-          const timeDiff = deliveryTime - now;
-  
-          if (timeDiff <= 0) {
-            updatedRemainingTime[order.id] = 'Delivered';
-          } else {
-            const hours = Math.floor(timeDiff / 3600000);
-            const minutes = Math.floor((timeDiff % 3600000) / 60000);
-            const seconds = Math.floor((timeDiff % 60000) / 1000);
-            updatedRemainingTime[order.id] = `${hours}h ${minutes}m ${seconds}s`;
-          }
-        });
-        setRemainingTime(updatedRemainingTime);
+        console.log(response.data.$values);
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error('Error fetching products:', error);
       }
     };
   
-    const interval = setInterval(fetchOrders, 1000);
-  
-    return () => clearInterval(interval);
-  }, []); // Only run once on component mount
+    getOrders();
+  }, []);
 
+  const calculateRemainingTime = (orderTimestamp) => {
+    const deliveryTime = new Date(orderTimestamp);
+    deliveryTime.setHours(deliveryTime.getHours() + 1); // Add 1 hour to order timestamp
+    const now = new Date();
+    
+    if (now >= deliveryTime) {
+      return 'Delivered';
+    } else {
+      const timeDiff = deliveryTime - now;
+      const hours = Math.floor(timeDiff / 3600000);
+      const minutes = Math.floor((timeDiff % 3600000) / 60000);
+      const seconds = Math.floor((timeDiff % 60000) / 1000);
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+  };
   
-  const handleCancelOrder = (orderId) => {
+  const handleCancelOrder = async (orderId) => {
     console.log(`Canceling order with ID: ${orderId}`);
+    try {
+      const order = new Order(
+        orderId,
+        new Date(),
+        "",
+        "",
+        0,
+        0,
+        null
+      );
+  
+      const response = await cancelOrder(order);
+      console.log('Login response:', response.data.$values);
+      setOrders(response.data.$values);
+    } catch (error) {
+      if(error.response.data)
+        alert(`[Error]: ${JSON.stringify(error.response.data.message)}`);
+      else
+        alert("[ERROR]");
+      console.log(error);
+    }
   };
 
   return (
@@ -109,16 +76,24 @@ const PreviousOrdersPage = () => {
                 <p>Comment: {order.comment}</p>
                 <h5>Ordered Items:</h5>
                 <ul>
-                  {/* {order.orderItems.map((item, index) => (
-                    <li key={index}>
-                      {item.quantity}x {item.name} - ${item.price.toFixed(2)} each
+                  {order.orderItems.$values.map((item) => (
+                    <li key={item.$id}>
+                      {item.product ? (
+                        `${item.quantity}x ${item.product.name} - $${item.product.price.toFixed(2)} each`
+                      ) : (
+                        `Product information not available`
+                      )}
                     </li>
-                  ))} */}
+                  ))}
                 </ul>
-                <p>Total Amount Paid: ${order.totalCost.toFixed(2)}</p>
-                <p> Time until delivery: {remainingTime[order.id]}</p>
-                <Button variant="danger" onClick={() => handleCancelOrder(order.id)}>
-                  Cancel Order
+                <p><strong>Total Amount Paid: </strong>${order.totalCost.toFixed(2)}</p>
+                <p><strong>Time until delivery: </strong>{calculateRemainingTime(order.timeOrdered)}</p>
+                <Button
+                  variant={calculateRemainingTime(order.timeOrdered)==='Delivered' ? "primary" : "danger"}
+                  onClick={() => handleCancelOrder(order.orderId)}
+                  disabled={calculateRemainingTime(order.timeOrdered)==='Delivered'} // Disable the button if the order is delivered
+                  >
+                  {calculateRemainingTime(order.timeOrdered)==='Delivered' ? 'Order Delivered' : 'Cancel Order'}
                 </Button>
               </Card.Body>
             </Card>

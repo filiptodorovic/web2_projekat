@@ -39,6 +39,24 @@ namespace backendShop.Controllers
             return Ok(writtenUser);
         }
 
+        [HttpPost("google-register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleRegister([FromBody] RegistrationDataDTO registerData)
+        {
+            UserDTO writtenUser = null;
+            try
+            {
+                writtenUser = await _userService.GoogleRegisterUser(registerData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            if (writtenUser == null)
+                return BadRequest();
+            return Ok(writtenUser);
+        }
+
         [HttpPost("log-in")]
         [AllowAnonymous]
         public async Task<IActionResult> LogIn([FromBody] LoginDataDTO loginData)
@@ -47,6 +65,24 @@ namespace backendShop.Controllers
             try
             {
                 token = await _userService.LoginUser(loginData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            if (token == String.Empty)
+                return BadRequest();
+            return Ok(token);
+        }
+
+        [HttpPost("google-log-in")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleLogIn([FromBody] string googleToken)
+        {
+            string token = String.Empty;
+            try
+            {
+                token = await _userService.GoogleLoginUser(googleToken);
             }
             catch (Exception ex)
             {
@@ -79,7 +115,7 @@ namespace backendShop.Controllers
         }
 
         [HttpGet("get-all-sellers")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         //add roles
         public async Task<IActionResult> GetAllSellers()
         {
@@ -91,7 +127,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("approve-seller")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         //add roles
         public async Task<IActionResult> ApproveSeller([FromBody] SellerDTO sellerData)
         {
@@ -114,7 +150,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("deny-seller")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         //add roles
         public async Task<IActionResult> DenySeller([FromBody] SellerDTO sellerData)
         {
@@ -165,7 +201,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("update-profile")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> EditUser([FromBody] UserDTO userData)
         {
             UserDTO writtenUser = null;

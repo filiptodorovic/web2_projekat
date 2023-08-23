@@ -22,7 +22,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("add-product")]
-        [Authorize]
+        [Authorize(Roles = "SELLER")]
         //add roles
         public async Task<IActionResult> AddProduct([FromBody] ProductDTO product)
         {
@@ -45,7 +45,7 @@ namespace backendShop.Controllers
         }
 
         [HttpGet("get-all-seller-products")]
-        [Authorize]
+        [Authorize(Roles = "SELLER")]
         //add roles
         public async Task<IActionResult> GetAllSellerProduct()
         {
@@ -90,7 +90,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("remove-product")]
-        [Authorize]
+        [Authorize(Roles = "SELLER")]
         //add roles
         public async Task<IActionResult> RemoveProduct([FromBody] ProductDTO product)
         {
@@ -113,7 +113,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("update-product")]
-        [Authorize]
+        [Authorize(Roles = "SELLER")]
         //add roles
         public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO product)
         {

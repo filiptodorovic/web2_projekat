@@ -1,54 +1,40 @@
 import React,  { useState, useEffect } from 'react';
 import { Container, Accordion, Card, Button } from 'react-bootstrap';
+import { getAllSellerOldOrders } from '../services/OrderService';
 
 const MyOrdersPage = () => {
-  const orders = [
-    {
-        id: 1,
-        timestamp: '2023-08-27 12:30 PM',
-        customer: {
-          name: 'John Doe',
-          email: 'john@example.com',
-          address: '123 Main St, City',
-        },
-        comment: 'Please deliver before 5 PM',
-        items: [
-          { name: 'Product 1', quantity: 2, price: 10.0 },
-          { name: 'Product 2', quantity: 3, price: 15.0 },
-        ],
-        totalAmount: 55.0,
-      },
-      {
-        id: 2,
-        timestamp: '2023-08-28 2:45 PM',
-        customer: {
-          name: 'Jane Smith',
-          email: 'jane@example.com',
-          address: '456 Elm St, Town',
-        },
-        comment: 'Handle with care',
-        items: [
-          { name: 'Product 3', quantity: 1, price: 20.0 },
-          { name: 'Product 4', quantity: 2, price: 25.0 },
-        ],
-        totalAmount: 70.0,
-      },
-      {
-        id: 3,
-        timestamp: '2023-08-30 12:00 AM',
-        customer: {
-          name: 'Michael Johnson',
-          email: 'michael@example.com',
-          address: '789 Oak Ave, Village',
-          
-        },
-        comment: '',
-        items: [
-          { name: 'Product 2', quantity: 5, price: 15.0 },
-        ],
-        totalAmount: 75.0,
+  const [orders, setOrders] = useState([]);
+  const [remainingTime, setRemainingTime] = useState({});
+
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const response = await getAllSellerOldOrders();
+        setOrders(response.data.$values);
+        console.log(response.data.$values);
+      } catch (error) {
+        console.error('Error fetching products:', error);
       }
-  ];
+    };
+  
+    getOrders();
+  }, []);
+
+  const calculateRemainingTime = (orderTimestamp) => {
+    const deliveryTime = new Date(orderTimestamp);
+    deliveryTime.setHours(deliveryTime.getHours() + 1); // Add 1 hour to order timestamp
+    const now = new Date();
+    
+    if (now >= deliveryTime) {
+      return 'Delivered';
+    } else {
+      const timeDiff = deliveryTime - now;
+      const hours = Math.floor(timeDiff / 3600000);
+      const minutes = Math.floor((timeDiff % 3600000) / 60000);
+      const seconds = Math.floor((timeDiff % 60000) / 1000);
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+  };
 
   return (
     <Container>
@@ -56,24 +42,27 @@ const MyOrdersPage = () => {
       <Accordion>
         {orders.map((order,index) => (
             <Accordion.Item eventKey={index}>
-            <Accordion.Header>Order id: {order.id}</Accordion.Header>
+            <Accordion.Header>Order id: {order.orderId}</Accordion.Header>
             <Accordion.Body>
-            <Card key={order.id}>
+            <Card key={order.orderId}>
               <Card.Body>
-                <p>Customer Name: {order.customer.name}</p>
+                {/* <p>Customer Name: {order.customer.name}</p>
                 <p>Customer Email: {order.customer.email}</p>
-                <p>Delivery Address: {order.customer.address}</p>
+                <p>Delivery Address: {order.customer.address}</p> */}
                 <p>Comment: {order.comment}</p>
                 <h5>Ordered Items:</h5>
                 <ul>
-                  {order.items.map((item, index) => (
-                    <li key={index}>
-                      {item.quantity}x {item.name} - ${item.price.toFixed(2)} each
-                    </li>
-                  ))}
-                </ul>
-                <p>Total Amount Paid: ${order.totalAmount.toFixed(2)}</p>
-                <p> Delivered</p>
+                    {order.orderItems.$values.map((item) => (
+                      <li key={item.$id}>
+                        {item.product ? (
+                          `${item.quantity}x ${item.product.name} - $${item.product.price.toFixed(2)} each`
+                        ) : (
+                          `Product information not available`
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <p><strong>Delivery status: </strong>{order.isCancelled ? "ORDER CANCELLED" : "DELIVERED"}</p>
               </Card.Body>
             </Card>
           </Accordion.Body>

@@ -1,4 +1,6 @@
-﻿namespace backendShop.DTO
+﻿using backendShop.Models;
+
+namespace backendShop.DTO
 {
     public class ProductDTO
     {

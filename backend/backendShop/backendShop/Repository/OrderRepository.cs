@@ -38,6 +38,13 @@ namespace backendShop.Repository
         {
             return _context.Orders.ToList();
         }
+
+        public async Task<bool> UpdateOrder(Order o)
+        {
+            _context.Update(o);
+            _context.SaveChanges();
+            return true;
+        }
     }
 
 }

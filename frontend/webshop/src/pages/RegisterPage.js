@@ -6,6 +6,10 @@ import { GoogleLogin } from '@react-oauth/google';
 import {registerUser} from '../services/UserService';
 import { Formik,Form, Field, ErrorMessage } from 'formik';
 import registrationValidationSchema from '../components/registrationValidationSchema'
+import jwtDecode from 'jwt-decode';
+import User from '../models/User'
+import {registerUserGoogle} from '../services/UserService'
+
 
 const RegisterPage = () => {
 
@@ -117,7 +121,15 @@ const RegisterPage = () => {
           <div className="text-center google-register">
           <GoogleLogin
             onSuccess={credentialResponse => {
-              console.log(credentialResponse);
+              // console.log(credentialResponse);
+              // const decodedToken = jwtDecode(credentialResponse.credential);
+              // console.log(decodedToken);
+
+              // const googleUser = new User(decodedToken.email,decodedToken.email,decodedToken.given_name,decodedToken.family_name,"","",2,2,"");
+              // console.log(googleUser);
+              // const response = await registerUserGoogle(googleUser);
+              // console.log(googleUser);
+
             }}
 
             theme="outline"

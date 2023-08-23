@@ -23,7 +23,7 @@ namespace backendShop.Controllers
         }
 
         [HttpPost("checkout")]
-        [Authorize]
+        [Authorize(Roles = "BUYER")]
         public async Task<IActionResult> Checkout([FromBody] OrderDTO order)
         {
             try
@@ -42,7 +42,7 @@ namespace backendShop.Controllers
         }
 
         [HttpGet("get-all-orders")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllOrders()
         {
             List<OrderDTO> orders = null;
@@ -62,7 +62,7 @@ namespace backendShop.Controllers
         }
 
         [HttpGet("get-all-user-orders")]
-        [Authorize]
+        [Authorize(Roles = "BUYER")]
         public async Task<IActionResult> GetAllUserOrders()
         {
             List<OrderDTO> orders = null;
@@ -70,6 +70,69 @@ namespace backendShop.Controllers
             {
                 int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
                 orders = await _orderService.GetAllUserOrders(userId);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (orders == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(orders);
+        }
+
+        [HttpPost("cancel-order")]
+        [Authorize(Roles = "BUYER")]
+        public async Task<IActionResult> CancelOrder([FromBody] OrderDTO order)
+        {
+            List<OrderDTO> orders = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                orders = await _orderService.CancelOrder(userId, order.OrderId);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (orders == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(orders);
+        }
+
+        [HttpGet("get-all-seller-new-orders")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> GetSellerNewOrders()
+        {
+            List<OrderDTO> orders = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                orders = await _orderService.GetSellerNewOrders(userId);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+            if (orders == null)
+                return BadRequest(new { Message = "No products in the DB!" });
+            return Ok(orders);
+        }
+
+        [HttpGet("get-all-seller-old-orders")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> GetSellerOldOrders()
+        {
+            List<OrderDTO> orders = null;
+            try
+            {
+                int userId = Int32.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+                orders = await _orderService.GetSellerOldOrders(userId);
 
             }
             catch (Exception ex)

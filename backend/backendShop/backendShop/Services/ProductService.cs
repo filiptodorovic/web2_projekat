@@ -173,7 +173,7 @@ namespace backendShop.Services
             try
             {
                 List<Product> prods = await _productRepository.GetAllProducts();
-                prods = prods.FindAll(p => !p.isDeleted);
+                prods = prods.FindAll(p => (!p.isDeleted && p.Amount>0));
                 return _mapper.Map<List<Product>, List<ProductDTO>>(prods);
             }
             catch (Exception ex) { throw ex; }

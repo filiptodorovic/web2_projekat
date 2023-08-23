@@ -18,5 +18,6 @@ namespace backendShop.DTO
         public UserType UserType { get; set; }
         public VerificationStatus VerificationStatus { get; set; }
         public int DeliveryCost { get; set; }
+
     }
 }

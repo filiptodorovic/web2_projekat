@@ -34,3 +34,35 @@ export const getAllUserOrders = async () => {
             },
         });
 };
+
+export const cancelOrder = async (orderId) => {
+    return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_ORDER_CONTROLLER}/cancel-order`,
+        orderId,
+        {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        }
+    );
+}
+
+export const getAllSellerNewOrders = async () => {
+    return await axios.get(
+        `${REACT_APP_BASE_URL}/${REACT_APP_ORDER_CONTROLLER}/get-all-seller-new-orders`, 
+        {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+};
+
+export const getAllSellerOldOrders = async () => {
+    return await axios.get(
+        `${REACT_APP_BASE_URL}/${REACT_APP_ORDER_CONTROLLER}/get-all-seller-old-orders`, 
+        {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+};

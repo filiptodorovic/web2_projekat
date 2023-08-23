@@ -17,6 +17,20 @@ export const loginUser = async (loginData) => {
   );
 };
 
+export const registerUserGoogle = async (googleRegistrationData) => {
+  return await axios.post(
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/register`,
+    googleRegistrationData
+  );
+};
+
+export const loginUserGoogle = async (googleLoginData) => {
+return await axios.post(
+  `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/log-in`,
+  googleLoginData
+);
+};
+
 export const fetchUserData = async () => {
   return await axios.get(
     `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/profile`, 

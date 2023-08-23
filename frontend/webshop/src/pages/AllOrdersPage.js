@@ -63,7 +63,7 @@ const AllOrdersPage = () => {
                   ))}
                 </ul>
                 <p><strong>Total Amount Paid: </strong>${order.totalCost.toFixed(2)}</p>
-                <p><strong>Time until delivery: </strong>{calculateRemainingTime(order.timeOrdered)}</p>
+                <p><strong>Time until delivery: </strong>{order.isCancelled ? "ORDER CANCELLED" : calculateRemainingTime(order.timeOrdered)}</p>
                 </Card.Body>
               </Card>
             </Accordion.Body>

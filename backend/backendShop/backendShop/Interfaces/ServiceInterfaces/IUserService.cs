@@ -9,6 +9,8 @@ namespace backendShop.Interfaces.ServiceInterfaces
     {
         Task<UserDTO> RegisterUser(RegistrationDataDTO regdata);
         Task<string> LoginUser(LoginDataDTO regdata);
+        Task<UserDTO> GoogleRegisterUser(RegistrationDataDTO regdata);
+        Task<string> GoogleLoginUser(string GoogleLoginToken);
         Task<UserDTO> GetUserById(int id);
         Task<UserDTO> EditUser(int id,UserDTO updateData);
         Task<List<SellerDTO>> GetAllSellers();
