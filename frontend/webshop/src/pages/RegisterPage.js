@@ -120,15 +120,22 @@ const RegisterPage = () => {
           <h4 className="text-center">Register via Google </h4>
           <div className="text-center google-register">
           <GoogleLogin
-            onSuccess={credentialResponse => {
-              // console.log(credentialResponse);
-              // const decodedToken = jwtDecode(credentialResponse.credential);
-              // console.log(decodedToken);
+            onSuccess={async credentialResponse => {
+              console.log(credentialResponse);
+              const decodedToken = jwtDecode(credentialResponse.credential);
+              console.log(decodedToken);
 
-              // const googleUser = new User(decodedToken.email,decodedToken.email,decodedToken.given_name,decodedToken.family_name,"","",2,2,"");
-              // console.log(googleUser);
-              // const response = await registerUserGoogle(googleUser);
-              // console.log(googleUser);
+              const googleUser = new User(decodedToken.email,decodedToken.email,decodedToken.given_name,decodedToken.family_name,"","",2,2,"");
+              console.log(googleUser);
+              try {
+                const response = await registerUserGoogle(googleUser);
+                alert("Successfully registered!");
+              } catch (error) {
+                console.error('Registration error:', error);
+                alert(`[Error]`);
+              } finally {
+
+              }
 
             }}
 

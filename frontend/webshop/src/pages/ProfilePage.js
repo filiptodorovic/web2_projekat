@@ -6,7 +6,9 @@ import User from '../models/User'
 
 const ProfilePage = () => {
 
-const [editedFile, setEditedFile] = useState([]);
+
+
+  const [editedFile, setEditedFile] = useState([]);
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -69,7 +71,7 @@ const [editedFile, setEditedFile] = useState([]);
           userData.data.pictureUrl
         ));
         setIsEditing(false); 
-
+        alert("Successfully updated user!");
       } catch (error) {
         console.error('Error updating user profile:', error);
       }
@@ -115,7 +117,7 @@ const [editedFile, setEditedFile] = useState([]);
         userData.data.verificationStatus,
         userData.data.pictureUrl
       ));
-
+      alert("Successfully updated user's picture!");
 
     } catch (error) {
       console.error('Error uploading image:', error);

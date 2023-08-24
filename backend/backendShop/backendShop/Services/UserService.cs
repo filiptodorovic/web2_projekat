@@ -275,7 +275,7 @@ namespace backendShop.Services
             if (updateData.LastName != null)
                 user.LastName = updateData.LastName;
 
-            if (updateData.DateOfBirth <= DateTime.MinValue) {
+            if (updateData.DateOfBirth > DateTime.MinValue) {
                 int year = updateData.DateOfBirth.Year;
                 int month = updateData.DateOfBirth.Month;
                 int day = updateData.DateOfBirth.Day;

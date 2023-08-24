@@ -228,7 +228,7 @@ namespace backendShop.Services
 
             foreach (var order in orders) {
                 foreach (var item in order.OrderItems) {
-                    if (prodIds.Contains(item.ProductId))
+                    if (prodIds.Contains(item.ProductId) && !retOrders.Contains(order))
                         retOrders.Add(order);
                 }
             }
@@ -276,7 +276,7 @@ namespace backendShop.Services
             {
                 foreach (var item in order.OrderItems)
                 {
-                    if (prodIds.Contains(item.ProductId))
+                    if (prodIds.Contains(item.ProductId) && !retOrders.Contains(order))
                         retOrders.Add(order);
                 }
             }

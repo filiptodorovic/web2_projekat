@@ -11,7 +11,7 @@ const NewOrders = () => {
       try {
         const response = await getAllSellerNewOrders();
         setOrders(response.data.$values);
-        console.log(response.data.$values);
+        console.log(response);
       } catch (error) {
         console.error('Error fetching products:', error);
       }

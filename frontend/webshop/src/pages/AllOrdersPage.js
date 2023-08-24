@@ -39,7 +39,7 @@ const AllOrdersPage = () => {
   return (
     <Container>
       <h2 className="page-heading text-center manage-products-heading">All Orders</h2>
-      <Accordion>
+      <Accordion className="accordion">
         {orders.map((order, index) => (
           <Accordion.Item key={order.orderId} eventKey={index}>
             <Accordion.Header>Order id: {order.orderId}</Accordion.Header>

@@ -19,14 +19,14 @@ export const loginUser = async (loginData) => {
 
 export const registerUserGoogle = async (googleRegistrationData) => {
   return await axios.post(
-    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/register`,
+    `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/google-register`,
     googleRegistrationData
   );
 };
 
 export const loginUserGoogle = async (googleLoginData) => {
 return await axios.post(
-  `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/log-in`,
+  `${REACT_APP_BASE_URL}/${REACT_APP_USER_CONTROLLER}/google-log-in`,
   googleLoginData
 );
 };

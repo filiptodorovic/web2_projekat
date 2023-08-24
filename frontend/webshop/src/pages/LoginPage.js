@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { GoogleLogin } from '@react-oauth/google';
-import {loginUser} from '../services/UserService';
+import {loginUser, loginUserGoogle} from '../services/UserService';
 import '../index.css'; // Import custom stylesheet
 import { useNavigate } from "react-router-dom";
 
 
+
 const LoginPage = () => {
+
   let navigate = useNavigate();
     const logOut = () => {
       localStorage.clear();
@@ -77,11 +79,31 @@ const LoginPage = () => {
           <h5 className="text-center">Or</h5>
           <div className="mt-2 text-center google-login">
           <GoogleLogin
-            onSuccess={credentialResponse => {
+            onSuccess={async credentialResponse => {
               console.log(credentialResponse);
+
+              const requestData = {
+                accessToken: credentialResponse.credential,
+              };
+
+              console.log(requestData);
+
+
+              try {
+                const response = await loginUserGoogle(requestData);
+                console.log(response);
+                localStorage.setItem('token', response.data);
+                alert("Successfully logged in!");
+                navigate("/profile");
+              } catch (error) {
+                console.error('Login error:', error);
+                alert(`[Error]`);
+              } finally {
+
+              }
+
             }}
 
-            text="signup_with"
             theme="outline"
             shape="circle"
           

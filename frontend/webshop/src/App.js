@@ -17,21 +17,24 @@ import jwtDecode from 'jwt-decode';
 
 function App() {
   const [userRole, setUserRole] = useState(null); // Initialize state using useState
+  const [verificationStatus, setVerificationStatus] = useState(null); // Initialize state using useState
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      console.log(role);
+      setVerificationStatus(decodedToken.VerificationStatus);
       setUserRole(role);
+      console.log(role);
+      console.log(verificationStatus);
     }
   }, []); // Use useEffect to fetch data on component mount
 
   require('dotenv').config()
   return (
     <Router>
-      <CustomNavbar userRole={userRole}/>
+      <CustomNavbar userRole={userRole} verificationStatus={verificationStatus}/>
       <Routes>
         <Route path="/" element={<LandingPageButtons />} />
         <Route path="/login" element={<LoginPage />} />

@@ -77,12 +77,12 @@ namespace backendShop.Controllers
 
         [HttpPost("google-log-in")]
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleLogIn([FromBody] string googleToken)
+        public async Task<IActionResult> GoogleLogIn([FromBody] GoogleTokenDTO googleToken)
         {
             string token = String.Empty;
             try
             {
-                token = await _userService.GoogleLoginUser(googleToken);
+                token = await _userService.GoogleLoginUser(googleToken.accessToken);
             }
             catch (Exception ex)
             {

@@ -31,15 +31,9 @@ const handleCheckout = async () => {
 
     // Make the API call to send the order data
     const response = await checkoutOrder(order);
-
-    if (response.ok) {
-      setCartItems([]); // Clear the cart
-      setAddress('');
-      setComment('');
-    } else {
-      // Handle error
-    }
+    
   } catch (error) {
+    alert("[ERROR]")
     console.log('Error :', error);
   }
 
@@ -47,6 +41,8 @@ const handleCheckout = async () => {
   setCartItems([]);
   setAddress('');
   setComment('');
+  alert("Order successfully placed!");
+
 };
 
 return (
