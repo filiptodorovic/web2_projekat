@@ -7,7 +7,6 @@ const CustomNavbar = ({userRole,verificationStatus}) => {
     let navigate = useNavigate();
     const logOut = () => {
       localStorage.clear();
-      alert("Logged out!");
       navigate("/");
     };
 
